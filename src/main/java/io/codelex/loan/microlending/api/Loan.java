@@ -7,12 +7,12 @@ public class Loan {
     private Long id;
     private User userId;
     private Long amount;
-    private LocalDate term;
+    private Long term;
     private boolean status;
 
-    public Loan(Long id, User userId, Long amount, LocalDate term, boolean status) {
+
+    public Loan(Long id, Long amount, Long term, boolean status) {
         this.id = id;
-        this.userId = userId;
         this.amount = amount;
         this.term = term;
         this.status = status;
@@ -26,14 +26,6 @@ public class Loan {
         this.id = id;
     }
 
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
     public Long getAmount() {
         return amount;
     }
@@ -42,11 +34,11 @@ public class Loan {
         this.amount = amount;
     }
 
-    public LocalDate getTerm() {
+    public Long getTerm() {
         return term;
     }
 
-    public void setTerm(LocalDate term) {
+    public void setTerm(Long term) {
         this.term = term;
     }
 

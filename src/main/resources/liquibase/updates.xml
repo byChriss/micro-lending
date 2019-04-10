@@ -3,17 +3,78 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-    <changeSet id="create user table" author="krists">
-        <createTable tableName="user">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_users"/>
+
+    <changeSet id="create clients table" author="krists">
+        <createSequence sequenceName="client_seq"/>
+        <createTable tableName="clients">
+            <column name="id" type="bigint" defaultValueSequenceNext="client_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_client"/>
             </column>
-            <column name="first_name" type="varchar(255)">
+            <column name="first_name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="varchar(255)">
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
+
+
+    <changeSet id="create users table" author="krists">
+    <createSequence sequenceName="user_seq"/>
+    <createTable tableName="users">
+        <column name="id" type="bigint" defaultValueSequenceNext="user_seq">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+        </column>
+        <column name="username" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="password" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="client_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="client_id"
+                                 constraintName="fk_users_client_id_clients_id"
+                                 referencedTableName="clients"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 />
+    </changeSet>
+
+
+    <changeSet id="create loan table" author="krists">
+        <createSequence sequenceName="loan_seq"/>
+        <createTable tableName="loans">
+            <column name="id" type="bigint" defaultValueSequenceNext="loan_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_loan"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="term" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="loans"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_loans_user_id_users_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
 </databaseChangeLog>

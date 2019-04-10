@@ -1,7 +1,7 @@
 spring:
   datasource:
     username: codelex
-    password: codelex
+    password: krists
     url: jdbc:postgresql://localhost:5432/micro-lending
   jpa:
     hibernate:

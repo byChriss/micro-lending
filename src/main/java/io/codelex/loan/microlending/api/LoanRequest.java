@@ -10,10 +10,10 @@ public class LoanRequest {
     @NotNull
     private Long amount;
     @NotNull
-    private LocalDate term;
+    private Long term;
 
     public LoanRequest(@JsonProperty("amount") Long amount, 
-                       @JsonProperty("term") LocalDate term) {
+                       @JsonProperty("term") Long term) {
         this.amount = amount;
         this.term = term;
     }
@@ -21,16 +21,8 @@ public class LoanRequest {
     public Long getAmount() {
         return amount;
     }
-
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getTerm() {
+    public Long getTerm() {
         return term;
     }
 
-    public void setTerm(LocalDate term) {
-        this.term = term;
-    }
 }
