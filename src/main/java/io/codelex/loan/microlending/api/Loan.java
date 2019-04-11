@@ -4,19 +4,20 @@ import java.time.LocalDate;
 public class Loan {
 
     private Long id;
-    /*private User userId;*/
     private Long amount;
     private Long term;
     private LocalDate approvalDate;
     private LocalDate repaymentsDate;
+    private Double extendAmount;
     private boolean status;
 
-    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, boolean status) {
+    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, Double extendAmount, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
         this.approvalDate = approvalDate;
         this.repaymentsDate = repaymentsDate;
+        this.extendAmount = extendAmount;
         this.status = status;
     }
 
@@ -58,6 +59,14 @@ public class Loan {
 
     public void setRepaymentsDate(LocalDate repaymentsDate) {
         this.repaymentsDate = repaymentsDate;
+    }
+
+    public Double getExtendAmount() {
+        return extendAmount;
+    }
+
+    public void setExtendAmount(Double extendAmount) {
+        this.extendAmount = extendAmount;
     }
 
     public boolean isStatus() {

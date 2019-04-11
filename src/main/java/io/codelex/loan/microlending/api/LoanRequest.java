@@ -3,7 +3,6 @@ package io.codelex.loan.microlending.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 public class LoanRequest {
     

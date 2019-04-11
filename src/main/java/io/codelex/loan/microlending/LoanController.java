@@ -4,7 +4,6 @@ import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanRequest;
 import io.codelex.loan.microlending.service.LoanService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api")
 public class LoanController {
 
-    @Autowired
-    private LoanService service;
+    
+    private final LoanService service;
+
+    public LoanController(LoanService service) {
+        this.service = service;
+    }
 
 
     @PutMapping("/loans")

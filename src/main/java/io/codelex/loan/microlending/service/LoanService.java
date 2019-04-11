@@ -20,6 +20,8 @@ public class LoanService {
     private List<Loan> loans = new ArrayList<>();
     private AtomicLong loansID = new AtomicLong();
     private IpService ipService = new IpService();
+    private InterestFactorService factorService = new InterestFactorService();
+    
 
     public Loan createLoan(LoanRequest request, HttpServletRequest servletRequest) {
         if (!ipService.maxAttemptsFromIpReached()) {
@@ -32,6 +34,7 @@ public class LoanService {
                         request.getTerm(),
                         currentDate,
                         LocalDate.now().plusDays(request.getTerm()),
+                        factorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
                         true
                 );
                 ipService.addIp(servletRequest);
@@ -47,6 +50,7 @@ public class LoanService {
             for (Loan loan : loans) {
                 if (loan.getId().equals(id)) {
                     loan.setRepaymentsDate(loan.getRepaymentsDate().plusDays(days));
+                    loan.setExtendAmount(factorService.extendLoanInterestFactor(loan.getAmount(),days));
                     return loan;
                 }
 
@@ -54,8 +58,8 @@ public class LoanService {
         }
         return null;
     }
-
-
+    
+    
     private boolean isLoanPresent(Long id) {
         for (Loan loan : loans) {
             if (loan.getId().equals(id)) {
@@ -72,6 +76,5 @@ public class LoanService {
         return false;
     }
 
-   /*interest factor per week is 1.5
-    amount(1 + 0.015)^7 = ....*/
+ 
 }
