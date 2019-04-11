@@ -6,14 +6,17 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private Client client;
+    private String firstName;
+    private String lastName;
+    private String email;
 
-
-    public User(Long id, String username, String password, Client client) {
+    public User(Long id, String username, String password, String firstName, String lastName, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.client = client;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     public Long getId() {
@@ -40,11 +43,27 @@ public class User {
         this.password = password;
     }
 
-    public Client getClient() {
-        return client;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
