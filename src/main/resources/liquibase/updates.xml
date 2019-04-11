@@ -4,24 +4,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
-    <changeSet id="create clients table" author="krists">
-        <createSequence sequenceName="client_seq"/>
-        <createTable tableName="clients">
-            <column name="id" type="bigint" defaultValueSequenceNext="client_seq">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_client"/>
-            </column>
-            <column name="first_name" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_name" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
 
     <changeSet id="create users table" author="krists">
     <createSequence sequenceName="user_seq"/>
@@ -35,14 +17,23 @@
         <column name="password" type="varchar(100)">
             <constraints nullable="false"/>
         </column>
-        <column name="client_id" type="bigint">
+        <column name="first_name" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="last_name" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="email" type="varchar(100)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="loan_id" type="bigint">
             <constraints nullable="false"/>
         </column>
     </createTable>
         <addForeignKeyConstraint baseTableName="users"
-                                 baseColumnNames="client_id"
-                                 constraintName="fk_users_client_id_clients_id"
-                                 referencedTableName="clients"
+                                 baseColumnNames="loan_id"
+                                 constraintName="fk_users_loan_id_loans_id"
+                                 referencedTableName="loans"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
                                  />
@@ -55,9 +46,6 @@
             <column name="id" type="bigint" defaultValueSequenceNext="loan_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_loan"/>
             </column>
-            <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
             <column name="amount" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -68,13 +56,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="loans"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_loans_user_id_users_id"
-                                 referencedTableName="users"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-        />
     </changeSet>
 
 </databaseChangeLog>

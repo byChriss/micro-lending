@@ -1,7 +1,5 @@
 package io.codelex.loan.microlending.api;
 
-import java.time.LocalDate;
-
 public class Loan {
     
     private Long id;
@@ -10,7 +8,7 @@ public class Loan {
     private Long term;
     private boolean status;
 
-    public Loan(Long id, Long amount, LocalDate term, boolean status) {
+    public Loan(Long id, Long amount, Long term, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;

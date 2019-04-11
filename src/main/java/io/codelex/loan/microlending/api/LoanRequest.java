@@ -25,7 +25,5 @@ public class LoanRequest {
         return term;
     }
 
-    public void setTerm(LocalDate term) {
-        this.term = term;
-    }
+
 }

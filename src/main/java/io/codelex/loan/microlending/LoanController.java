@@ -4,6 +4,7 @@ import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanRequest;
 import io.codelex.loan.microlending.service.LoanService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api")
 public class LoanController {
 
+    @Autowired
     private LoanService service;
+
 
     @PutMapping("/loans")
      public ResponseEntity<Loan> creatLoanRequest(@RequestBody LoanRequest request, HttpServletRequest httpRequest){
@@ -23,6 +26,6 @@ public class LoanController {
     
     @PostMapping("/loans/{id}/extend")
     public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days){
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
     }
 }
