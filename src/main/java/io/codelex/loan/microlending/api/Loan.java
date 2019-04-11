@@ -5,14 +5,13 @@ import java.time.LocalDate;
 public class Loan {
     
     private Long id;
-    private User userId;
+    /*private User userId;*/
     private Long amount;
     private LocalDate term;
     private boolean status;
 
-    public Loan(Long id, User userId, Long amount, LocalDate term, boolean status) {
+    public Loan(Long id, Long amount, LocalDate term, boolean status) {
         this.id = id;
-        this.userId = userId;
         this.amount = amount;
         this.term = term;
         this.status = status;
@@ -24,14 +23,6 @@ public class Loan {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
     }
 
     public Long getAmount() {

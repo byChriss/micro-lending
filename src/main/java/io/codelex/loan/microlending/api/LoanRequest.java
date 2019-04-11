@@ -22,15 +22,8 @@ public class LoanRequest {
         return amount;
     }
 
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
-
     public LocalDate getTerm() {
         return term;
     }
 
-    public void setTerm(LocalDate term) {
-        this.term = term;
-    }
 }

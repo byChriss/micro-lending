@@ -3,24 +3,26 @@ package io.codelex.loan.microlending;
 import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanRequest;
 import io.codelex.loan.microlending.service.LoanService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api")
 public class LoanController {
-    
+   
     private LoanService service;
 
-    public LoanController(LoanService service) {
-        this.service = service;
+    @PutMapping("/loans")
+     public ResponseEntity<Loan> creatLoanRequest(@RequestBody LoanRequest request, HttpServletRequest httpRequest){
+        return new ResponseEntity<>(service.createLoan(request, httpRequest), HttpStatus.ACCEPTED);
     }
     
-    @PostMapping
-    private ResponseEntity<Loan> getLoanRequest(@RequestBody LoanRequest request){
-        return null;
+    @PostMapping("/loans/{id}/extend")
+    public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days){
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 }
