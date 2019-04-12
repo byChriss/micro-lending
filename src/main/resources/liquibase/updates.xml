@@ -26,17 +26,7 @@
         <column name="email" type="varchar(100)">
             <constraints nullable="false"/>
         </column>
-        <column name="loan_id" type="bigint">
-            <constraints nullable="false"/>
-        </column>
     </createTable>
-        <addForeignKeyConstraint baseTableName="users"
-                                 baseColumnNames="loan_id"
-                                 constraintName="fk_users_loan_id_loans_id"
-                                 referencedTableName="loans"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 />
     </changeSet>
 
 
@@ -52,10 +42,29 @@
             <column name="term" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="approval_date" type="timestamp without timezone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="repayment_date" type="timestamp without timezone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extend_amount" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="status" type="boolean">
                 <constraints nullable="false"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="loans"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_loans_user_id_users_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+        />
     </changeSet>
 
 </databaseChangeLog>

@@ -5,8 +5,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/micro-lending
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
   liquibase:
     change-log: classpath:/liquibase/updates.xml
     enabled: false
-
+micro-lending:
+  store-type: database

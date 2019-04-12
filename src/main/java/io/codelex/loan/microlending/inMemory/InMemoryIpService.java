@@ -1,23 +1,25 @@
-package io.codelex.loan.microlending.service;
+package io.codelex.loan.microlending.inMemory;
 
+import io.codelex.loan.microlending.IpService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class IpService {
+public class InMemoryIpService implements IpService {
     private List<String> ipList = new ArrayList<>();
     private int equalIpCounter = 0;
 
-    void addIp(HttpServletRequest servletRequest) {
+    @Override
+    public void addIp(HttpServletRequest servletRequest) {
         ipList.add(getClientIp(servletRequest));
     }
 
-    private static String getClientIp(HttpServletRequest servletRequest) {
+    @Override
+    public String getClientIp(HttpServletRequest servletRequest) {
 
         String remoteAddr = "";
 
@@ -30,7 +32,8 @@ public class IpService {
         return remoteAddr;
     }
 
-    boolean maxAttemptsFromIpReached() {
+    @Override
+    public boolean maxAttemptsFromIpReached() {
         for (int i = 0; i < ipList.size(); i++) {
             String part1 = ipList.get(i);
             for (int j = i + 1; j < ipList.size(); j++) {
@@ -46,8 +49,9 @@ public class IpService {
         return false;
     }
 
+    @Override
     @Scheduled(cron = "0 0 * * * *")
-    void removeAttemptsAfterDay() {
+    public void removeAttemptsAfterDay() {
         ipList.clear();
     }
 }

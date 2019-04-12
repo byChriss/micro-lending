@@ -1,26 +1,22 @@
-package io.codelex.loan.microlending.api;
+package io.codelex.loan.microlending.repository.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public class Loan {
-
+@Entity
+@Table(name = "loans")
+public class LoanRecord {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long amount;
     private Long term;
     private LocalDate approvalDate;
-    private LocalDate repaymentsDate;
+    private LocalDate repaymentDate;
     private Double extendAmount;
     private boolean status;
-
-    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, Double extendAmount, boolean status) {
-        this.id = id;
-        this.amount = amount;
-        this.term = term;
-        this.approvalDate = approvalDate;
-        this.repaymentsDate = repaymentsDate;
-        this.extendAmount = extendAmount;
-        this.status = status;
-    }
+    @ManyToOne
+    private UserRecord owner;
 
     public Long getId() {
         return id;
@@ -54,12 +50,12 @@ public class Loan {
         this.approvalDate = approvalDate;
     }
 
-    public LocalDate getRepaymentsDate() {
-        return repaymentsDate;
+    public LocalDate getRepaymentDate() {
+        return repaymentDate;
     }
 
-    public void setRepaymentsDate(LocalDate repaymentsDate) {
-        this.repaymentsDate = repaymentsDate;
+    public void setRepaymentDate(LocalDate repaymentDate) {
+        this.repaymentDate = repaymentDate;
     }
 
     public Double getExtendAmount() {
@@ -76,5 +72,13 @@ public class Loan {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public UserRecord getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserRecord owner) {
+        this.owner = owner;
     }
 }

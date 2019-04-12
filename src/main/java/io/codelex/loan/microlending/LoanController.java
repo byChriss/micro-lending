@@ -2,7 +2,6 @@ package io.codelex.loan.microlending;
 
 import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanRequest;
-import io.codelex.loan.microlending.service.LoanService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
