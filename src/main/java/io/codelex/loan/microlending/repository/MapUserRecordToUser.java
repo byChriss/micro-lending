@@ -5,9 +5,17 @@ import io.codelex.loan.microlending.repository.model.UserRecord;
 
 import java.util.function.Function;
 
-public class MapUserRecordToUser implements Function<UserRecord, User> {
+class MapUserRecordToUser implements Function<UserRecord, User> {
+
     @Override
     public User apply(UserRecord userRecord) {
-        return null;
+        return new User(
+                userRecord.getId(),
+                userRecord.getUsername(),
+                userRecord.getPassword(),
+                userRecord.getFirstName(),
+                userRecord.getLastName(),
+                userRecord.getEmail()
+        );
     }
 }

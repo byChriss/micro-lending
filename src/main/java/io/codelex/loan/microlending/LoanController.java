@@ -30,4 +30,5 @@ public class LoanController {
     public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days){
         return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
     }
+
 }

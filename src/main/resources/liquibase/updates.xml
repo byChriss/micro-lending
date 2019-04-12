@@ -6,27 +6,27 @@
 
 
     <changeSet id="create users table" author="krists">
-    <createSequence sequenceName="user_seq"/>
-    <createTable tableName="users">
-        <column name="id" type="bigint" defaultValueSequenceNext="user_seq">
-            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
-        </column>
-        <column name="username" type="varchar(100)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="password" type="varchar(100)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="first_name" type="varchar(100)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="last_name" type="varchar(100)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="email" type="varchar(100)">
-            <constraints nullable="false"/>
-        </column>
-    </createTable>
+        <createSequence sequenceName="user_seq"/>
+        <createTable tableName="users">
+            <column name="id" type="bigint" defaultValueSequenceNext="user_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="username" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
@@ -65,6 +65,39 @@
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
         />
+    </changeSet>
+
+
+    <changeSet id="create extension table" author="krists">
+        <createSequence sequenceName="extension_seq"/>
+        <createTable tableName="extensions">
+            <column name="id" type="bigint" defaultValueSequenceNext="extension_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_extension"/>
+            </column>
+            <column name="extension_days" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extension_date" type="timestamp without timezone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payback_date" type="timestamp without timezone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="loan_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="extensions"
+                                 baseColumnNames="loan_id"
+                                 constraintName="fk_extensions_loan_id_loans_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+        />
+
     </changeSet>
 
 </databaseChangeLog>

@@ -10,15 +10,17 @@ public class Loan {
     private LocalDate approvalDate;
     private LocalDate repaymentsDate;
     private Double extendAmount;
+    private User owner;
     private boolean status;
 
-    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, Double extendAmount, boolean status) {
+    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, Double extendAmount, User owner, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
         this.approvalDate = approvalDate;
         this.repaymentsDate = repaymentsDate;
         this.extendAmount = extendAmount;
+        this.owner = owner;
         this.status = status;
     }
 
@@ -68,6 +70,14 @@ public class Loan {
 
     public void setExtendAmount(Double extendAmount) {
         this.extendAmount = extendAmount;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public boolean isStatus() {

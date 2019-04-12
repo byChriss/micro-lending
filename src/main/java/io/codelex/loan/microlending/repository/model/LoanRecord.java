@@ -18,6 +18,7 @@ public class LoanRecord {
     @ManyToOne
     private UserRecord owner;
 
+
     public Long getId() {
         return id;
     }

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 public class InMemoryInterestFactorService implements InterestFactorService {
     @Override
     public Double extendLoanInterestFactor(Long amount, Long term) {
+        return getaDouble(amount, term);
+    }
+    private static Double getaDouble(Long amount, Long term) {
         if (term == 7) {
 
             return amount * Math.pow(1 + 0.015, 7) - amount;
