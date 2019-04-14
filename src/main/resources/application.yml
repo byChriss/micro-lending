@@ -10,4 +10,4 @@ spring:
     change-log: classpath:/liquibase/updates.xml
     enabled: false
 micro-lending:
-  store-type: in-memory
+  store-type: database

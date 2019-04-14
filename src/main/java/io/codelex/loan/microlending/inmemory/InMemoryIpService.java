@@ -1,6 +1,7 @@
-package io.codelex.loan.microlending.inMemory;
+package io.codelex.loan.microlending.inmemory;
 
 import io.codelex.loan.microlending.IpService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(prefix = "micro-lending", name = "store-type", havingValue = "in-memory")
 public class InMemoryIpService implements IpService {
     private List<String> ipList = new ArrayList<>();
     private int equalIpCounter = 0;

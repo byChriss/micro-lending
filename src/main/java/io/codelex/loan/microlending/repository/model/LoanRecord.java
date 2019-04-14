@@ -82,4 +82,5 @@ public class LoanRecord {
     public void setOwner(UserRecord owner) {
         this.owner = owner;
     }
+    
 }

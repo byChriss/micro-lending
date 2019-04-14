@@ -1,4 +1,4 @@
-package io.codelex.loan.microlending.inMemory;
+package io.codelex.loan.microlending.inmemory;
 
 import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanExtension;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 @Component
 @ConditionalOnProperty(prefix = "micro-lending", name = "store-type", havingValue = "in-memory")
 public class InMemoryLoanService implements LoanService {
@@ -27,6 +28,8 @@ public class InMemoryLoanService implements LoanService {
     private AtomicLong extendID = new AtomicLong();
     private InMemoryIpService ipService = new InMemoryIpService();
     private InMemoryInterestFactorService factorService = new InMemoryInterestFactorService();
+    
+    
 
     @Override
     public Loan createLoan(LoanRequest request, HttpServletRequest servletRequest) {
@@ -40,8 +43,8 @@ public class InMemoryLoanService implements LoanService {
                         request.getTerm(),
                         currentDate,
                         LocalDate.now().plusDays(request.getTerm()),
-                        factorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
-                        request.getId(),
+                        factorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()), 
+                        null,
                         true
                 );
                 ipService.addIp(servletRequest);
