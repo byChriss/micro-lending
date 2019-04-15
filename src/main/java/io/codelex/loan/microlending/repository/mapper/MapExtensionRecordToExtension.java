@@ -1,11 +1,11 @@
-package io.codelex.loan.microlending.repository;
+package io.codelex.loan.microlending.repository.mapper;
 
 import io.codelex.loan.microlending.api.LoanExtension;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 
 import java.util.function.Function;
 
-class MapExtensionRecordToExtension implements Function<ExtensionRecord, LoanExtension> {
+public class MapExtensionRecordToExtension implements Function<ExtensionRecord, LoanExtension> {
     private MapLoanRecordToLoan toLoan = new MapLoanRecordToLoan();
 
     @Override

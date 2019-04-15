@@ -5,30 +5,30 @@ import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanExtension;
 import io.codelex.loan.microlending.api.LoanRequest;
 
-import io.codelex.loan.microlending.api.User;
+import io.codelex.loan.microlending.repository.mapper.MapExtensionRecordToExtension;
+import io.codelex.loan.microlending.repository.mapper.MapLoanRecordToLoan;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 
+@Transactional
 @Component
-@ConditionalOnProperty(prefix = "micro-lending", name = "store-type", havingValue = "database")
 public class RepositoryLoanService implements LoanService {
     private final LoanRecordRepository loanRecordRepository;
     private final LoanExtensionRecordRepository extensionRecordRepository;
     private final UserRecordRepository userRecordRepository;
     private final MapLoanRecordToLoan toLoan = new MapLoanRecordToLoan();
-    private final MapUserRecordToUser toUser = new MapUserRecordToUser();
     private final MapExtensionRecordToExtension toExtension = new MapExtensionRecordToExtension();
     private RepositoryInterestFactorService interestFactorService = new RepositoryInterestFactorService();
     private RepositoryIpService ipService = new RepositoryIpService();
-   
+
 
     public RepositoryLoanService(
             LoanRecordRepository loanRecordRepository,
@@ -40,7 +40,15 @@ public class RepositoryLoanService implements LoanService {
     }
 
     @Override
-    public Loan createLoan(LoanRequest request, HttpServletRequest servletRequest){
+    public Loan createLoan(String owner, LoanRequest request, HttpServletRequest servletRequest) {
+        ipService.addIp(servletRequest);
+        Long maxAmount = 500L;
+        if (!ipService.maxAttemptsFromIpReached()) {
+            if (checkTime() && request.getAmount().equals(maxAmount)) {
+                throw new IllegalArgumentException("Time or amount is not valid");
+            } else {
+                UserRecord userRecord = userRecordRepository.finByEmail(owner);
+
                 LoanRecord loanRecord = new LoanRecord();
                 loanRecord.setAmount(request.getAmount());
                 loanRecord.setTerm(request.getTerm());
@@ -48,59 +56,59 @@ public class RepositoryLoanService implements LoanService {
                 loanRecord.setRepaymentDate(LocalDate.now().plusDays(request.getTerm()));
                 loanRecord.setExtendAmount(interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()));
                 loanRecord.setStatus(true);
+                loanRecord.setOwner(userRecord);
 
                 loanRecord = loanRecordRepository.save(loanRecord);
-
                 return toLoan.apply(loanRecord);
+
+            }
+        }
+        throw new IllegalStateException("Max attempts reached");
     }
 
     @Override
     public Loan findByIdAndExtend(Long id, Long days) {
         if (loanRecordRepository.isLoanPresent(id)) {
-            createLoanExtension(id,days);
+            if (days == 7) {
+                loanRecordRepository.updateRepaymentDateByWeek(id);
+                createLoanExtension(id, days);
+                LoanRecord record = loanRecordRepository.findLoanById(id);
+
+                return toLoan.apply(record);
+            } else if (days == 30) {
+                loanRecordRepository.updateRepaymentDateByMonth(id);
+                createLoanExtension(id, days);
+                LoanRecord record = loanRecordRepository.findLoanById(id);
+
+                return toLoan.apply(record);
+            }
+
         }
-        return null;
+        throw new NoSuchElementException("Loan is not present");
     }
 
     @Override
     public LoanExtension createLoanExtension(Long id, Long days) {
+        LoanRecord record = loanRecordRepository.findLoanById(id);
         ExtensionRecord extensionRecord = new ExtensionRecord();
         extensionRecord.setExtendDays(days);
         extensionRecord.setExtensionDate(LocalDate.now());
         extensionRecord.setPaybackDate(LocalDate.now().plusDays(days));
+        extensionRecord.setLoanId(record);
         extensionRecord.setStatus(true);
+
         extensionRecord = extensionRecordRepository.save(extensionRecord);
         return toExtension.apply(extensionRecord);
     }
 
-    @Override
-    public Loan findLoanById(Long id) {
-        return loanRecordRepository.findById(id)
-                .map(toLoan)
-                .orElseThrow(NoSuchElementException::new);
-    }
 
     private boolean checkTime() {
         LocalTime currentTime = LocalTime.now();
-        LocalTime endTime = LocalTime.MIDNIGHT;
+        LocalTime endTime = LocalTime.parse("07:00:00");
         if (currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(endTime)) {
             return true;
         }
         return false;
-    }
-
-    private UserRecord createOrGetUser(User user) {
-        return userRecordRepository.findById(user.getId())
-                .orElseGet(() -> {
-                    UserRecord createdUser = new UserRecord(
-                            user.getUsername(),
-                            user.getPassword(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail()
-                    );
-                    return userRecordRepository.save(createdUser);
-                });
     }
 
 }

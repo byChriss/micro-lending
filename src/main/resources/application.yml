@@ -9,5 +9,4 @@ spring:
   liquibase:
     change-log: classpath:/liquibase/updates.xml
     enabled: false
-micro-lending:
-  store-type: database
+
