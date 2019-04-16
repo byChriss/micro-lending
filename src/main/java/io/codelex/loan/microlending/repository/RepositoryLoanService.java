@@ -49,18 +49,25 @@ public class RepositoryLoanService implements LoanService {
             } else {
                 UserRecord userRecord = userRecordRepository.finByEmail(owner);
 
-                LoanRecord loanRecord = new LoanRecord();
-                loanRecord.setAmount(request.getAmount());
+                LoanRecord loanRecord = new LoanRecord(
+                        request.getAmount(),
+                        request.getTerm(),
+                        LocalDate.now(),
+                        LocalDate.now().plusDays(request.getTerm()),
+                        interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
+                        true,
+                        userRecord
+                );
+         /*       loanRecord.setAmount(request.getAmount());
                 loanRecord.setTerm(request.getTerm());
                 loanRecord.setApprovalDate(LocalDate.now());
                 loanRecord.setRepaymentDate(LocalDate.now().plusDays(request.getTerm()));
                 loanRecord.setExtendAmount(interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()));
                 loanRecord.setStatus(true);
-                loanRecord.setOwner(userRecord);
+                loanRecord.setOwner(userRecord);*/
 
                 loanRecord = loanRecordRepository.save(loanRecord);
                 return toLoan.apply(loanRecord);
-
             }
         }
         throw new IllegalStateException("Max attempts reached");
@@ -82,7 +89,6 @@ public class RepositoryLoanService implements LoanService {
 
                 return toLoan.apply(record);
             }
-
         }
         throw new NoSuchElementException("Loan is not present");
     }
@@ -90,12 +96,18 @@ public class RepositoryLoanService implements LoanService {
     @Override
     public LoanExtension createLoanExtension(Long id, Long days) {
         LoanRecord record = loanRecordRepository.findLoanById(id);
-        ExtensionRecord extensionRecord = new ExtensionRecord();
-        extensionRecord.setExtendDays(days);
+        ExtensionRecord extensionRecord = new ExtensionRecord(
+                days,
+                LocalDate.now(),
+                LocalDate.now().plusDays(days),
+                record,
+                true
+        );
+    /*    extensionRecord.setExtendDays(days);
         extensionRecord.setExtensionDate(LocalDate.now());
         extensionRecord.setPaybackDate(LocalDate.now().plusDays(days));
         extensionRecord.setLoanId(record);
-        extensionRecord.setStatus(true);
+        extensionRecord.setStatus(true);*/
 
         extensionRecord = extensionRecordRepository.save(extensionRecord);
         return toExtension.apply(extensionRecord);

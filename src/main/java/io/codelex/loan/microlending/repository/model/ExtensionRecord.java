@@ -20,7 +20,7 @@ public class ExtensionRecord {
 
     public ExtensionRecord() {
     }
-//todo
+
     public ExtensionRecord(Long extendDays, LocalDate extensionDate, LocalDate paybackDate, LoanRecord loanId, boolean status) {
         this.extendDays = extendDays;
         this.extensionDate = extensionDate;

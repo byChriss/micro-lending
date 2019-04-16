@@ -4,20 +4,16 @@ import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class LoanRecordRepositoryTest {
+public class UserRecordRepositoryTest {
 
     @Autowired
     UserRecordRepository userRecordRepository;
@@ -27,47 +23,52 @@ public class LoanRecordRepositoryTest {
     LoanExtensionRecordRepository extensionRecordRepository;
 
     private UserRecord userRecord = createUserRecord();
-    private LoanRecord loanRecord = createLoanRecord();
+
 
     @Test
-    public void should_not_be_able_find_loan_be_id_if_no_match(){
+    public void should_return_true_if_user_record_present() {
         //given
-        LoanRecord record = createLoanRecord();
-        //when
-        LoanRecord loanRecords = loanRecordRepository.findLoanById(2L);
-        //then
-        Assertions.assertNotEquals(record, loanRecords);
-    }
-
-    @Test
-    public void  should_find_loan_by_id(){
-        //given
-        loanRecord = loanRecordRepository.save(loanRecord);
         userRecord = userRecordRepository.save(userRecord);
         //when
-        LoanRecord loanRecords = loanRecordRepository.findLoanById(loanRecord.getId());
+        boolean isUserPresent = userRecordRepository.isUserPresent(userRecord.getUsername());
         //then
-        Assertions.assertEquals(loanRecords,loanRecord);
+        Assertions.assertTrue(isUserPresent);
 
     }
-
     @Test
-    public void should_return_true_if_loan_is_present(){
+    public void should_return_false_if_user_record_is_not_present() {
         //given
-        loanRecord = loanRecordRepository.save(loanRecord);
         userRecord = userRecordRepository.save(userRecord);
         //when
-        boolean isLoanPresent = loanRecordRepository.isLoanPresent(loanRecord.getId());
+        boolean isUserPresent = userRecordRepository.isUserPresent("Nothing");
         //then
-        Assertions.assertTrue(isLoanPresent);
+        Assertions.assertFalse(isUserPresent);
+
     }
 
 
+    @Test
+    public void should_find_user_record_by_email() {
+        //given
+        userRecord = userRecordRepository.save(userRecord);
+        //when
+        UserRecord user = userRecordRepository.finByEmail(userRecord.getEmail());
+        //then
+        Assertions.assertEquals(userRecord, user);
+    }
+    @Test
+    public void should_not_find_user_record_by_email_if_dont_exist() {
+        //given
+        userRecord = userRecordRepository.save(userRecord);
+        //when
+        UserRecord user = userRecordRepository.finByEmail("nothing@gmail.com");
+        //then
+        Assertions.assertNotEquals(userRecord, user);
+    }
 
-
-    private LoanRecord createLoanRecord(){
+    private LoanRecord createLoanRecord() {
         BigDecimal extendAmount = new BigDecimal(30);
-         LoanRecord loanRecord = new LoanRecord(
+        LoanRecord loanRecord = new LoanRecord(
                 300L,
                 7L,
                 LocalDate.now(),
@@ -77,11 +78,11 @@ public class LoanRecordRepositoryTest {
                 userRecord
 
         );
-         return loanRecord;
+        return loanRecord;
     }
 
-    private UserRecord createUserRecord(){
-         UserRecord userRecord = new UserRecord(
+    private UserRecord createUserRecord() {
+        UserRecord userRecord = new UserRecord(
                 "User",
                 "12345",
                 "Krists",
@@ -90,6 +91,7 @@ public class LoanRecordRepositoryTest {
 
         );
 
-         return userRecord;
+        return userRecord;
     }
+
 }

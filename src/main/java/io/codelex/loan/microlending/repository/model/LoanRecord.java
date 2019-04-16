@@ -23,6 +23,16 @@ public class LoanRecord {
     public LoanRecord() {
     }
 
+    public LoanRecord(Long amount, Long term, LocalDate approvalDate, LocalDate repaymentDate, BigDecimal extendAmount, boolean status, UserRecord owner) {
+        this.amount = amount;
+        this.term = term;
+        this.approvalDate = approvalDate;
+        this.repaymentDate = repaymentDate;
+        this.extendAmount = extendAmount;
+        this.status = status;
+        this.owner = owner;
+    }
+
     public Long getId() {
         return id;
     }
