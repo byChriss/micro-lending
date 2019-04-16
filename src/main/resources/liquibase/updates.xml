@@ -48,7 +48,7 @@
             <column name="repayment_date" type="timestamp without timezone">
                 <constraints nullable="false"/>
             </column>
-            <column name="extend_amount" type="bigint">
+            <column name="extend_amount" type="decimal">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="boolean">

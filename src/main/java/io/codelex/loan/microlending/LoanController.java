@@ -1,6 +1,7 @@
 package io.codelex.loan.microlending;
 
 import io.codelex.loan.microlending.api.Loan;
+import io.codelex.loan.microlending.api.LoanExtension;
 import io.codelex.loan.microlending.api.LoanRequest;
 
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class LoanController {
 
 
     @PostMapping("/loans")
-     public ResponseEntity<Loan> creatLoanRequest(Principal principal, @RequestBody LoanRequest request, HttpServletRequest httpRequest){
+     public ResponseEntity<Loan> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest){
         return new ResponseEntity<>(service.createLoan(principal.getName(), request, httpRequest), HttpStatus.ACCEPTED);
     }
     
@@ -32,4 +33,10 @@ public class LoanController {
     public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days){
         return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
     }
+    
+ /*   @GetMapping("/loans/extended")
+    public ResponseEntity<LoanExtension> findAllExtendedLoans(){
+        return new ResponseEntity<>();
+    }*/
+    
 }

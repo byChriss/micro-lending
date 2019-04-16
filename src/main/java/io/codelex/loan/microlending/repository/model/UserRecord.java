@@ -17,6 +17,9 @@ public class UserRecord {
     private String lastName;
     private String email;
 
+    public UserRecord() {
+    }
+
     public UserRecord(String username, String password, String firstName, String lastName, String email) {
         this.username = username;
         this.password = password;

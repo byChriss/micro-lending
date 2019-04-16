@@ -1,6 +1,7 @@
 package io.codelex.loan.microlending.repository.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -14,22 +15,12 @@ public class LoanRecord {
     private Long term;
     private LocalDate approvalDate;
     private LocalDate repaymentDate;
-    private Double extendAmount;
+    private BigDecimal extendAmount;
     private boolean status;
     @ManyToOne
     private UserRecord owner;
 
     public LoanRecord() {
-    }
-
-    public LoanRecord(Long amount, Long term, LocalDate approvalDate, LocalDate repaymentDate, Double extendAmount, boolean status, UserRecord owner) {
-        this.amount = amount;
-        this.term = term;
-        this.approvalDate = approvalDate;
-        this.repaymentDate = repaymentDate;
-        this.extendAmount = extendAmount;
-        this.status = status;
-        this.owner = owner;
     }
 
     public Long getId() {
@@ -72,11 +63,11 @@ public class LoanRecord {
         this.repaymentDate = repaymentDate;
     }
 
-    public Double getExtendAmount() {
+    public BigDecimal getExtendAmount() {
         return extendAmount;
     }
 
-    public void setExtendAmount(Double extendAmount) {
+    public void setExtendAmount(BigDecimal extendAmount) {
         this.extendAmount = extendAmount;
     }
 

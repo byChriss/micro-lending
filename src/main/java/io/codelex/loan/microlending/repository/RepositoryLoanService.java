@@ -102,7 +102,7 @@ public class RepositoryLoanService implements LoanService {
     }
 
 
-    private boolean checkTime() {
+    private boolean checkTime() {//todo
         LocalTime currentTime = LocalTime.now();
         LocalTime endTime = LocalTime.parse("07:00:00");
         if (currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(endTime)) {

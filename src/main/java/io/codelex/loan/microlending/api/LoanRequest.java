@@ -1,5 +1,6 @@
 package io.codelex.loan.microlending.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
@@ -10,7 +11,8 @@ public class LoanRequest {
     private Long amount;
     @NotNull
     private Long term;
-
+    
+    @JsonCreator
     public LoanRequest(@JsonProperty("amount") Long amount,
                        @JsonProperty("term") Long term) {
         this.amount = amount;

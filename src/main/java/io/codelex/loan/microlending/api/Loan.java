@@ -1,5 +1,6 @@
 package io.codelex.loan.microlending.api;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Loan {
@@ -9,11 +10,11 @@ public class Loan {
     private Long term;
     private LocalDate approvalDate;
     private LocalDate repaymentsDate;
-    private Double extendAmount;
+    private BigDecimal extendAmount;
     private User owner;
     private boolean status;
 
-    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, Double extendAmount, User owner, boolean status) {
+    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
@@ -64,11 +65,11 @@ public class Loan {
         this.repaymentsDate = repaymentsDate;
     }
 
-    public Double getExtendAmount() {
+    public BigDecimal getExtendAmount() {
         return extendAmount;
     }
 
-    public void setExtendAmount(Double extendAmount) {
+    public void setExtendAmount(BigDecimal extendAmount) {
         this.extendAmount = extendAmount;
     }
 

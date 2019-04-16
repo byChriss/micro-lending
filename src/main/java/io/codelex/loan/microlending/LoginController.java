@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -24,13 +25,13 @@ public class LoginController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<User> signIn(@RequestBody LoginRequest request) {
+    public ResponseEntity<User> signIn(@RequestBody @Valid LoginRequest request) {
         authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
         return new ResponseEntity<>(service.checkIfUserExists(request), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<User> register(@RequestBody @Valid CreateUserRequest request) {
         authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
         return new ResponseEntity<>(service.createUser(request), HttpStatus.CREATED);
     }

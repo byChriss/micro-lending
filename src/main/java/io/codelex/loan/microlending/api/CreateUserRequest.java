@@ -3,6 +3,7 @@ package io.codelex.loan.microlending.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 public class CreateUserRequest {
@@ -14,6 +15,7 @@ public class CreateUserRequest {
     private String firstName;
     @NotEmpty
     private String lastName;
+    @Email
     @NotEmpty
     private String email;
 

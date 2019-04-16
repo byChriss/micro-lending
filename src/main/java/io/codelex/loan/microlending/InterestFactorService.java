@@ -1,6 +1,9 @@
 package io.codelex.loan.microlending;
 
+import java.math.BigDecimal;
+
 public interface InterestFactorService {
-    Double extendLoanInterestFactor(Long amount, Long term);
+    //todo why double?
+    BigDecimal extendLoanInterestFactor(Long amount, Long term);
     
 }
