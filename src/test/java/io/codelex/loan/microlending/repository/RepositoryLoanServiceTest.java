@@ -10,6 +10,8 @@ import io.codelex.loan.microlending.repository.mapper.MapUserRecordToUser;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
+import io.codelex.loan.microlending.repository.service.RepositoryIpService;
+import io.codelex.loan.microlending.repository.service.RepositoryLoanService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -69,14 +71,11 @@ class RepositoryLoanServiceTest {
                 300L,
                 7L,
                 LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                LocalDate.now().plusDays(14),
                 extendAmount,
                 user,
                 true
         );
-
-
-
 
         LoanExtension extension = createExtension();
         //when
@@ -97,11 +96,9 @@ class RepositoryLoanServiceTest {
         Mockito.when(toExtension.apply(any()))
                 .thenReturn(extension);
 
-
         Loan result = service.findByIdAndExtend(1L, 7L);
 
-        Assert.assertNotEquals(loan1,result);
-
+        Assert.assertEquals(loan1.getRepaymentsDate(),result.getRepaymentsDate());
 
     }
 

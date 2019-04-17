@@ -1,10 +1,13 @@
-package io.codelex.loan.microlending.repository;
+package io.codelex.loan.microlending.repository.service;
 
 import io.codelex.loan.microlending.LoanService;
 import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanExtension;
 import io.codelex.loan.microlending.api.LoanRequest;
 
+import io.codelex.loan.microlending.repository.LoanExtensionRecordRepository;
+import io.codelex.loan.microlending.repository.LoanRecordRepository;
+import io.codelex.loan.microlending.repository.UserRecordRepository;
 import io.codelex.loan.microlending.repository.mapper.MapExtensionRecordToExtension;
 import io.codelex.loan.microlending.repository.mapper.MapLoanRecordToLoan;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;

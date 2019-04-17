@@ -5,18 +5,21 @@ import io.codelex.loan.microlending.api.*;
 import io.codelex.loan.microlending.repository.mapper.MapUserRecordToUser;
 
 import io.codelex.loan.microlending.repository.model.UserRecord;
+import io.codelex.loan.microlending.repository.service.RepositoryUserService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 class RepositoryUserServiceTest {
     private UserRecordRepository userRecordRepository = Mockito.mock(UserRecordRepository.class);
-    private RepositoryUserService service = new RepositoryUserService(userRecordRepository);
+    private PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    private RepositoryUserService service = new RepositoryUserService(userRecordRepository, passwordEncoder);
     private MapUserRecordToUser toUser = Mockito.mock(MapUserRecordToUser.class);
     private UserRecord userRecord = createUserRecord();
     private LoginRequest loginRequest = createLoginRequest();

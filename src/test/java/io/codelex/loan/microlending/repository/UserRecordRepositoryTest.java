@@ -1,6 +1,5 @@
 package io.codelex.loan.microlending.repository;
 
-import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -35,6 +32,7 @@ public class UserRecordRepositoryTest {
         Assertions.assertTrue(isUserPresent);
 
     }
+
     @Test
     public void should_return_false_if_user_record_is_not_present() {
         //given
@@ -56,6 +54,7 @@ public class UserRecordRepositoryTest {
         //then
         Assertions.assertEquals(userRecord, user);
     }
+
     @Test
     public void should_not_find_user_record_by_email_if_dont_exist() {
         //given
@@ -64,21 +63,6 @@ public class UserRecordRepositoryTest {
         UserRecord user = userRecordRepository.finByEmail("nothing@gmail.com");
         //then
         Assertions.assertNotEquals(userRecord, user);
-    }
-
-    private LoanRecord createLoanRecord() {
-        BigDecimal extendAmount = new BigDecimal(30);
-        LoanRecord loanRecord = new LoanRecord(
-                300L,
-                7L,
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
-                extendAmount,
-                true,
-                userRecord
-
-        );
-        return loanRecord;
     }
 
     private UserRecord createUserRecord() {

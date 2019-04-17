@@ -1,4 +1,4 @@
-package io.codelex.loan.microlending.repository;
+package io.codelex.loan.microlending.repository.service;
 
 import io.codelex.loan.microlending.IpService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

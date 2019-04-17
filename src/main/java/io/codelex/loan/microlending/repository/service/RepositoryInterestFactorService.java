@@ -1,4 +1,4 @@
-package io.codelex.loan.microlending.repository;
+package io.codelex.loan.microlending.repository.service;
 
 import io.codelex.loan.microlending.InterestFactorService;
 import org.springframework.stereotype.Component;
