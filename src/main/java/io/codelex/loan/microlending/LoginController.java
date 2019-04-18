@@ -26,7 +26,7 @@ public class LoginController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<User> signIn(@Valid @RequestBody LoginRequest request) {
-        User user = service.checkIfUserExists(request);
+        User user = service.checkIfUserExists(request, request.getPassword());
         authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
         return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }

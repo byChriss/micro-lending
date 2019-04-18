@@ -1,7 +1,6 @@
 package io.codelex.loan.microlending;
 
 import io.codelex.loan.microlending.api.Loan;
-import io.codelex.loan.microlending.api.LoanExtension;
 import io.codelex.loan.microlending.api.LoanRequest;
 
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -37,9 +35,15 @@ public class LoanController {
     public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days) {
         return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
     }
-    @GetMapping("loans/extensions")
-    public ResponseEntity<Map<LoanRecord, List<ExtensionRecord>>> getExtensions(Principal principal){
-        return new ResponseEntity<>(service.getLoansWithExtensions(principal.getName()), HttpStatus.FOUND);
+
+    @GetMapping("/loans/{id}/extensions")
+    public ResponseEntity<List<ExtensionRecord>> getExtensions(@PathVariable Long id) {
+        return new ResponseEntity<>(service.getLoansWithExtensions(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/loans/all")
+    public ResponseEntity<List<LoanRecord>> getActualLoansForUser(Principal principal) {
+        return new ResponseEntity<>(service.findAllLoansByUserEmail(principal.getName()), HttpStatus.OK);
     }
 
 }

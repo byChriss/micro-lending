@@ -8,7 +8,7 @@ import io.codelex.loan.microlending.repository.model.LoanRecord;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
+
 
 public interface LoanService {
 
@@ -18,7 +18,7 @@ public interface LoanService {
 
     LoanExtension createLoanExtension(Long id, Long days);
 
-    List<LoanRecord> findAllExtensionsByUserEmail(String owner);
+    List<LoanRecord> findAllLoansByUserEmail(String owner);
 
-    Map<LoanRecord, List<ExtensionRecord>> getLoansWithExtensions(String owner);
+    List<ExtensionRecord> getLoansWithExtensions(Long id);
 }

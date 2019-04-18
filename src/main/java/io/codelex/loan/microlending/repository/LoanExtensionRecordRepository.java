@@ -11,6 +11,6 @@ import java.util.List;
 public interface LoanExtensionRecordRepository extends JpaRepository<ExtensionRecord, Long> {
     
     @Query("select extention from ExtensionRecord extention" 
-    + " where extention.loanId = :loanId")
-    List<ExtensionRecord> findAllExtensionsForUser(@Param("loanId") LoanRecord loanId);
+    + " where extention.loanId.id = :id")
+    List<ExtensionRecord> findAllExtensionsForLoan(@Param("id") Long id);
 }

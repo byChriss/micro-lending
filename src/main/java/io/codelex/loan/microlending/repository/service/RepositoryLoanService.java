@@ -94,7 +94,7 @@ public class RepositoryLoanService implements LoanService {
         ExtensionRecord extensionRecord = new ExtensionRecord(
                 days,
                 LocalDate.now(),
-                LocalDate.now().plusDays(days),
+                record.getRepaymentDate().plusDays(days),
                 record,
                 true
         );
@@ -103,26 +103,15 @@ public class RepositoryLoanService implements LoanService {
     }
 
     @Override
-    public List<LoanRecord> findAllExtensionsByUserEmail(String owner) {
+    public List<LoanRecord> findAllLoansByUserEmail(String owner) {
         UserRecord userRecord = userRecordRepository.findByEmail(owner);
-
         return new ArrayList<>(loanRecordRepository.findLoanWithCurrentUser(userRecord));
     }
+
     @Override
-    public Map<LoanRecord, List<ExtensionRecord>> getLoansWithExtensions(String owner){
-        UserRecord userRecord = userRecordRepository.findByEmail(owner);
-        List<LoanRecord> loanRecord = loanRecordRepository.findLoanWithCurrentUser(userRecord);
-        Map<LoanRecord, List<ExtensionRecord>> loansWithExtensions = new HashMap<>();
-
-        for (int i = 0; i < loanRecord.size(); i++) {
-            LoanRecord currentRecord = loanRecord.get(i);
-
-            List<ExtensionRecord> extensionRecords = extensionRecordRepository.findAllExtensionsForUser(currentRecord);
-            loansWithExtensions.put(currentRecord, extensionRecords);
-        }
-        return loansWithExtensions;
+    public List<ExtensionRecord> getLoansWithExtensions(Long id) {
+        return new ArrayList<>(extensionRecordRepository.findAllExtensionsForLoan(id));
     }
-
 
     private boolean checkIfTimeIsValid() {
         LocalTime currentTime = LocalTime.now();
@@ -132,6 +121,4 @@ public class RepositoryLoanService implements LoanService {
         }
         return false;
     }
-
-
 }

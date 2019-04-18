@@ -41,9 +41,9 @@ public class RepositoryUserService implements UserService {
     }
 
     @Override
-    public User checkIfUserExists(LoginRequest request) {
+    public User checkIfUserExists(LoginRequest request, String password) {
         UserRecord record = userRecordRepository.findByEmail(request.getEmail());
-        if (record != null) {
+        if (record != null && isPasswordMatching(record, password)) {
             return toUser.apply(record);
         }
         throw new NoSuchElementException("No such a user");
