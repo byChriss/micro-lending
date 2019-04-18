@@ -41,40 +41,20 @@ public class ExtensionRecord {
         return extendDays;
     }
 
-    public void setExtendDays(Long extendDays) {
-        this.extendDays = extendDays;
-    }
-
     public LocalDate getExtensionDate() {
         return extensionDate;
-    }
-
-    public void setExtensionDate(LocalDate extensionDate) {
-        this.extensionDate = extensionDate;
     }
 
     public LocalDate getPaybackDate() {
         return paybackDate;
     }
-
-    public void setPaybackDate(LocalDate paybackDate) {
-        this.paybackDate = paybackDate;
-    }
-
+    
     public LoanRecord getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(LoanRecord loanId) {
-        this.loanId = loanId;
-    }
-
     public boolean isStatus() {
         return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 
     @Override
@@ -87,8 +67,8 @@ public class ExtensionRecord {
 
     @Override
     public int hashCode() {
-        
+
         return Objects.hash(id);
     }
-    
+
 }

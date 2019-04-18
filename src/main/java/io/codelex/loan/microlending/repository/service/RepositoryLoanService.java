@@ -13,12 +13,14 @@ import io.codelex.loan.microlending.repository.mapper.MapLoanRecordToLoan;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Transactional
@@ -49,6 +51,7 @@ public class RepositoryLoanService implements LoanService {
         if (!ipService.maxAttemptsFromIpReached()) {
             if (checkTime() && request.getAmount().equals(maxAmount)) {
                 throw new IllegalArgumentException("Time or amount is not valid");
+
             } else {
                 UserRecord userRecord = userRecordRepository.finByEmail(owner);
 
@@ -61,14 +64,6 @@ public class RepositoryLoanService implements LoanService {
                         true,
                         userRecord
                 );
-         /*       loanRecord.setAmount(request.getAmount());
-                loanRecord.setTerm(request.getTerm());
-                loanRecord.setApprovalDate(LocalDate.now());
-                loanRecord.setRepaymentDate(LocalDate.now().plusDays(request.getTerm()));
-                loanRecord.setExtendAmount(interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()));
-                loanRecord.setStatus(true);
-                loanRecord.setOwner(userRecord);*/
-
                 loanRecord = loanRecordRepository.save(loanRecord);
                 return toLoan.apply(loanRecord);
             }
@@ -106,18 +101,16 @@ public class RepositoryLoanService implements LoanService {
                 record,
                 true
         );
-    /*    extensionRecord.setExtendDays(days);
-        extensionRecord.setExtensionDate(LocalDate.now());
-        extensionRecord.setPaybackDate(LocalDate.now().plusDays(days));
-        extensionRecord.setLoanId(record);
-        extensionRecord.setStatus(true);*/
-
         extensionRecord = extensionRecordRepository.save(extensionRecord);
         return toExtension.apply(extensionRecord);
     }
 
+    @Override
+    public List<ExtensionRecord> findAllExtensionsByUserEmail(String owner) {
+       return null;
+    }
 
-    private boolean checkTime() {//todo
+    private boolean checkTime() {
         LocalTime currentTime = LocalTime.now();
         LocalTime endTime = LocalTime.parse("07:00:00");
         if (currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(endTime)) {
@@ -125,5 +118,6 @@ public class RepositoryLoanService implements LoanService {
         }
         return false;
     }
+
 
 }

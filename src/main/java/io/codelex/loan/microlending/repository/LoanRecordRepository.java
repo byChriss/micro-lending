@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
-
+    
+    
     @Query("select count(loan) > 0 from LoanRecord loan"
             + " where loan.id = :id")
     boolean isLoanPresent(@Param("id") Long id);
@@ -27,4 +28,6 @@ public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
     @Query("select loan from LoanRecord  loan"
     + " where loan.id = :id")
     LoanRecord findLoanById(@Param("id") Long id);
+    
+  
 }

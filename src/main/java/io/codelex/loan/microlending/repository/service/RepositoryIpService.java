@@ -35,7 +35,7 @@ public class RepositoryIpService implements IpService {
 
     @Override
     public boolean maxAttemptsFromIpReached() {
-        for (int i = 0; i < ipList.size(); i++) {
+        for (int i = equalIpCounter; i < ipList.size(); i++) {
             String part1 = ipList.get(i);
             for (int j = i + 1; j < ipList.size(); j++) {
                 String part2 = ipList.get(j);

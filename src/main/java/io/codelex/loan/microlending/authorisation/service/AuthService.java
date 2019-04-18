@@ -12,7 +12,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Component
 public class AuthService {
 
-    public void authorise(String email, String password, Role role ) {
+    public void authorise(String email, String password, Role role) {
         Set<SimpleGrantedAuthority> authorities = singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password, authorities);
         getContext().setAuthentication(token);
