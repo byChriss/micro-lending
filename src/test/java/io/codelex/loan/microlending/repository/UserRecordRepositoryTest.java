@@ -50,7 +50,7 @@ public class UserRecordRepositoryTest {
         //given
         userRecord = userRecordRepository.save(userRecord);
         //when
-        UserRecord user = userRecordRepository.finByEmail(userRecord.getEmail());
+        UserRecord user = userRecordRepository.findByEmail(userRecord.getEmail());
         //then
         Assertions.assertEquals(userRecord, user);
     }
@@ -60,7 +60,7 @@ public class UserRecordRepositoryTest {
         //given
         userRecord = userRecordRepository.save(userRecord);
         //when
-        UserRecord user = userRecordRepository.finByEmail("nothing@gmail.com");
+        UserRecord user = userRecordRepository.findByEmail("nothing@gmail.com");
         //then
         Assertions.assertNotEquals(userRecord, user);
     }

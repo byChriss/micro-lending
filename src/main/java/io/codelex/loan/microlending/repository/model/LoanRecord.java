@@ -88,4 +88,6 @@ public class LoanRecord {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

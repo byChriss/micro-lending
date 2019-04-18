@@ -42,7 +42,7 @@ public class RepositoryUserService implements UserService {
 
     @Override
     public User checkIfUserExists(LoginRequest request) {
-        UserRecord record = userRecordRepository.finByEmail(request.getEmail());
+        UserRecord record = userRecordRepository.findByEmail(request.getEmail());
         if (record != null) {
             return toUser.apply(record);
         }

@@ -46,7 +46,7 @@ class RepositoryUserServiceTest {
         //given
         User user = createUser();
         //when
-        Mockito.when(userRecordRepository.finByEmail(any()))
+        Mockito.when(userRecordRepository.findByEmail(any()))
                 .thenReturn(userRecord);
         Mockito.when(userRecordRepository.save(any()))
                 .thenReturn(userRecord);

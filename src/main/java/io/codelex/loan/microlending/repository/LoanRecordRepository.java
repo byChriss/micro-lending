@@ -1,11 +1,14 @@
 package io.codelex.loan.microlending.repository;
 
 import io.codelex.loan.microlending.repository.model.LoanRecord;
+import io.codelex.loan.microlending.repository.model.UserRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 
 public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
@@ -28,6 +31,10 @@ public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
     @Query("select loan from LoanRecord  loan"
     + " where loan.id = :id")
     LoanRecord findLoanById(@Param("id") Long id);
+
+    @Query("select loan from LoanRecord loan"
+    + " where loan.owner = :owner")
+   List<LoanRecord> findLoanWithCurrentUser(@Param("owner")UserRecord owner);
     
   
 }
