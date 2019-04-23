@@ -18,7 +18,8 @@ public interface LoanService {
 
     LoanExtension createLoanExtension(Long id, Long days);
 
-    List<LoanRecord> findAllLoansByUserEmail(String owner);
+    List<LoanRecord> findLoanByUserEmail(String owner);
 
     List<ExtensionRecord> getLoansWithExtensions(Long id);
+    
 }

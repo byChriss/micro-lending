@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -44,29 +45,31 @@ public class RepositoryLoanService implements LoanService {
     @Override
     public Loan createLoan(String owner, LoanRequest request, HttpServletRequest servletRequest) {
         ipService.addIp(servletRequest);
-        Long maxAmount = 500L;
-        if (!ipService.maxAttemptsFromIpReached()) {
-            if (checkIfTimeIsValid() && request.getAmount().equals(maxAmount)) {
-                throw new IllegalArgumentException("Time or amount is not valid");
+        UserRecord currentUser = userRecordRepository.findByEmail(owner);
 
-            } else {
-                UserRecord userRecord = userRecordRepository.findByEmail(owner);
+        if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)
+                || ipService.maxAttemptsFromIpReached()
+                || checkIfTimeIsValid()) {
+            throw new IllegalStateException();
+        } else if (!checkIfTermIsValid(request) && checkIfAmountIsValid(request)) {
+            throw new InvalidParameterException("Invalid term or amount");
+        } else {
+            UserRecord userRecord = userRecordRepository.findByEmail(owner);
 
-                LoanRecord loanRecord = new LoanRecord(
-                        request.getAmount(),
-                        request.getTerm(),
-                        LocalDate.now(),
-                        LocalDate.now().plusDays(request.getTerm()),
-                        interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
-                        true,
-                        userRecord
-                );
-                loanRecord = loanRecordRepository.save(loanRecord);
-                return toLoan.apply(loanRecord);
-            }
+            LoanRecord loanRecord = new LoanRecord(
+                    request.getAmount(),
+                    request.getTerm(),
+                    LocalDate.now(),
+                    LocalDate.now().plusDays(request.getTerm()),
+                    interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
+                    true,
+                    userRecord
+            );
+            loanRecord = loanRecordRepository.save(loanRecord);
+            return toLoan.apply(loanRecord);
         }
-        throw new IllegalStateException("Max attempts reached");
     }
+
 
     @Override
     public Loan findByIdAndExtend(Long id, Long days) {
@@ -103,7 +106,7 @@ public class RepositoryLoanService implements LoanService {
     }
 
     @Override
-    public List<LoanRecord> findAllLoansByUserEmail(String owner) {
+    public List<LoanRecord> findLoanByUserEmail(String owner) {
         UserRecord userRecord = userRecordRepository.findByEmail(owner);
         return new ArrayList<>(loanRecordRepository.findLoanWithCurrentUser(userRecord));
     }
@@ -117,6 +120,20 @@ public class RepositoryLoanService implements LoanService {
         LocalTime currentTime = LocalTime.now();
         LocalTime endTime = LocalTime.parse("07:00:00");
         if (currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(endTime)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkIfTermIsValid(LoanRequest request) {
+        if (request.getTerm() == 7 || request.getTerm() == 30) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkIfAmountIsValid(LoanRequest request) {
+        if (request.getAmount() > 100 || request.getAmount() < 500) {
             return true;
         }
         return false;

@@ -12,8 +12,8 @@ import java.util.List;
 
 
 public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
-    
-    
+
+
     @Query("select count(loan) > 0 from LoanRecord loan"
             + " where loan.id = :id")
     boolean isLoanPresent(@Param("id") Long id);
@@ -29,12 +29,14 @@ public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
     void updateRepaymentDateByMonth(@Param("id") Long id);
 
     @Query("select loan from LoanRecord  loan"
-    + " where loan.id = :id")
+            + " where loan.id = :id")
     LoanRecord findLoanById(@Param("id") Long id);
 
     @Query("select loan from LoanRecord loan"
-    + " where loan.owner = :owner")
-   List<LoanRecord> findLoanWithCurrentUser(@Param("owner")UserRecord owner);
-    
-  
+            + " where loan.owner = :owner")
+    List<LoanRecord> findLoanWithCurrentUser(@Param("owner") UserRecord owner);
+
+    @Query("select count(loan) > 0 from LoanRecord  loan"
+            + " where loan.owner = :owner")
+    boolean checkIfCurrentUserHaveLoan(@Param("owner") UserRecord owner);
 }

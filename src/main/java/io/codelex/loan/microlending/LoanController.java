@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.InvalidParameterException;
 import java.security.Principal;
 import java.util.List;
 
@@ -28,7 +29,13 @@ public class LoanController {
 
     @PostMapping("/loans")
     public ResponseEntity<Loan> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
-        return new ResponseEntity<>(service.createLoan(principal.getName(), request, httpRequest), HttpStatus.ACCEPTED);
+        try {
+            return new ResponseEntity<>(service.createLoan(principal.getName(), request, httpRequest), HttpStatus.ACCEPTED);
+        }catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }catch (InvalidParameterException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/loans/{id}/extend")
@@ -43,7 +50,7 @@ public class LoanController {
 
     @GetMapping("/loans/all")
     public ResponseEntity<List<LoanRecord>> getActualLoansForUser(Principal principal) {
-        return new ResponseEntity<>(service.findAllLoansByUserEmail(principal.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(service.findLoanByUserEmail(principal.getName()), HttpStatus.OK);
     }
 
 }
