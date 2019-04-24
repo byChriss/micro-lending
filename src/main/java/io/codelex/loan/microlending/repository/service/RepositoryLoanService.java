@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -32,14 +33,17 @@ public class RepositoryLoanService implements LoanService {
     private final MapExtensionRecordToExtension toExtension = new MapExtensionRecordToExtension();
     private RepositoryInterestFactorService interestFactorService = new RepositoryInterestFactorService();
     private RepositoryIpService ipService = new RepositoryIpService();
+    private ClockTime clockTime;
+
 
     public RepositoryLoanService(
             LoanRecordRepository loanRecordRepository,
             LoanExtensionRecordRepository extensionRecordRepository,
-            UserRecordRepository userRecordRepository) {
+            UserRecordRepository userRecordRepository, ClockTime clockTime) {
         this.loanRecordRepository = loanRecordRepository;
         this.extensionRecordRepository = extensionRecordRepository;
         this.userRecordRepository = userRecordRepository;
+        this.clockTime = clockTime;
     }
 
     @Override
@@ -59,8 +63,8 @@ public class RepositoryLoanService implements LoanService {
             LoanRecord loanRecord = new LoanRecord(
                     request.getAmount(),
                     request.getTerm(),
-                    LocalDate.now(),
-                    LocalDate.now().plusDays(request.getTerm()),
+                    clockTime.getTime(),
+                    clockTime.getTime().plusDays(request.getTerm()),
                     interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
                     true,
                     userRecord
@@ -96,7 +100,7 @@ public class RepositoryLoanService implements LoanService {
         LoanRecord record = loanRecordRepository.findLoanById(id);
         ExtensionRecord extensionRecord = new ExtensionRecord(
                 days,
-                LocalDate.now(),
+                clockTime.getTime(),
                 record.getRepaymentDate().plusDays(days),
                 record,
                 true

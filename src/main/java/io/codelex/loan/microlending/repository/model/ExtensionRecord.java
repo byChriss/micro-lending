@@ -1,9 +1,8 @@
 package io.codelex.loan.microlending.repository.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Table(name = "extensions")
@@ -12,8 +11,8 @@ public class ExtensionRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long extendDays;
-    private LocalDate extensionDate;
-    private LocalDate paybackDate;
+    private LocalDateTime extensionDate;
+    private LocalDateTime paybackDate;
     @ManyToOne
     private LoanRecord loanId;
     private boolean status;
@@ -21,7 +20,7 @@ public class ExtensionRecord {
     public ExtensionRecord() {
     }
 
-    public ExtensionRecord(Long extendDays, LocalDate extensionDate, LocalDate paybackDate, LoanRecord loanId, boolean status) {
+    public ExtensionRecord(Long extendDays, LocalDateTime extensionDate, LocalDateTime paybackDate, LoanRecord loanId, boolean status) {
         this.extendDays = extendDays;
         this.extensionDate = extensionDate;
         this.paybackDate = paybackDate;
@@ -41,14 +40,14 @@ public class ExtensionRecord {
         return extendDays;
     }
 
-    public LocalDate getExtensionDate() {
+    public LocalDateTime getExtensionDate() {
         return extensionDate;
     }
 
-    public LocalDate getPaybackDate() {
+    public LocalDateTime getPaybackDate() {
         return paybackDate;
     }
-    
+
     public LoanRecord getLoanId() {
         return loanId;
     }

@@ -1,20 +1,20 @@
 package io.codelex.loan.microlending.api;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Loan {
 
     private Long id;
     private Long amount;
     private Long term;
-    private LocalDate approvalDate;
-    private LocalDate repaymentsDate;
+    private LocalDateTime approvalDate;
+    private LocalDateTime repaymentsDate;
     private BigDecimal extendAmount;
     private User owner;
     private boolean status;
 
-    public Loan(Long id, Long amount, Long term, LocalDate approvalDate, LocalDate repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
+    public Loan(Long id, Long amount, Long term, LocalDateTime approvalDate, LocalDateTime repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
@@ -49,19 +49,19 @@ public class Loan {
         this.term = term;
     }
 
-    public LocalDate getApprovalDate() {
+    public LocalDateTime getApprovalDate() {
         return approvalDate;
     }
 
-    public void setApprovalDate(LocalDate approvalDate) {
+    public void setApprovalDate(LocalDateTime approvalDate) {
         this.approvalDate = approvalDate;
     }
 
-    public LocalDate getRepaymentsDate() {
+    public LocalDateTime getRepaymentsDate() {
         return repaymentsDate;
     }
 
-    public void setRepaymentsDate(LocalDate repaymentsDate) {
+    public void setRepaymentsDate(LocalDateTime repaymentsDate) {
         this.repaymentsDate = repaymentsDate;
     }
 

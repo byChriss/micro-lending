@@ -1,16 +1,16 @@
 package io.codelex.loan.microlending.api;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class LoanExtension {
     private Long id;
     private Long extensionDays;
-    private LocalDate extensionDate;
-    private LocalDate paybackDate;
+    private LocalDateTime extensionDate;
+    private LocalDateTime paybackDate;
     private Loan loanId;
     private boolean status;
 
-    public LoanExtension(Long id, Long extensionDays, LocalDate extensionDate, LocalDate paybackDate, Loan loanId, boolean status) {
+    public LoanExtension(Long id, Long extensionDays, LocalDateTime extensionDate, LocalDateTime paybackDate, Loan loanId, boolean status) {
         this.id = id;
         this.extensionDays = extensionDays;
         this.extensionDate = extensionDate;
@@ -35,19 +35,19 @@ public class LoanExtension {
         this.extensionDays = extensionDays;
     }
 
-    public LocalDate getExtensionDate() {
+    public LocalDateTime getExtensionDate() {
         return extensionDate;
     }
 
-    public void setExtensionDate(LocalDate extensionDate) {
+    public void setExtensionDate(LocalDateTime extensionDate) {
         this.extensionDate = extensionDate;
     }
 
-    public LocalDate getPaybackDate() {
+    public LocalDateTime getPaybackDate() {
         return paybackDate;
     }
 
-    public void setPaybackDate(LocalDate paybackDate) {
+    public void setPaybackDate(LocalDateTime paybackDate) {
         this.paybackDate = paybackDate;
     }
 

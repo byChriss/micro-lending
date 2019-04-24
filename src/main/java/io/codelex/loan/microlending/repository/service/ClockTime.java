@@ -7,7 +7,11 @@ import java.time.LocalDateTime;
 
 @Component
 public class ClockTime {
-private LocalDateTime time;
+    public LocalDateTime time;
+
+    public ClockTime() {
+    }
+
 
     public void setTime(LocalDateTime time) {
         this.time = time;
