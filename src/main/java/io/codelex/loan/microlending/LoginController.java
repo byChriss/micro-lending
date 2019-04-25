@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -26,15 +27,24 @@ public class LoginController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<User> signIn(@Valid @RequestBody LoginRequest request) {
-        User user = service.checkIfUserExists(request, request.getPassword());
-        authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+        try {
+            User user = service.checkIfUserExists(request, request.getPassword());
+            authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody CreateUserRequest request) {
-        authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
-        return new ResponseEntity<>(service.createUser(request), HttpStatus.CREATED);
+        try {
+            authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
+            return new ResponseEntity<>(service.createUser(request), HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+      
     }
 
     @PostMapping("/sign-out")

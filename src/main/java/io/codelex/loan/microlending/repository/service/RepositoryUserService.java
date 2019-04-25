@@ -26,18 +26,19 @@ public class RepositoryUserService implements UserService {
 
     @Override
     public User createUser(CreateUserRequest request) {
-        if (!userRecordRepository.isUserPresent(request.getUsername())) {
+        if (userRecordRepository.isUserPresent(request.getEmail())) {
+            throw new IllegalArgumentException("username is taken");
+        }
+        if(checkIfPasswordIsValid(request)){
+            throw new IllegalArgumentException("Invalid password content");
+        }
             UserRecord userRecord = new UserRecord(
-                    request.getUsername(),
                     passwordEncoder.encode(request.getPassword()),
-                    request.getFirstName(),
-                    request.getLastName(),
                     request.getEmail());
 
             userRecord = userRecordRepository.save(userRecord);
             return toUser.apply(userRecord);
-        }
-        throw new IllegalArgumentException("username is taken");
+       
     }
 
     @Override
@@ -52,5 +53,12 @@ public class RepositoryUserService implements UserService {
     private boolean isPasswordMatching(UserRecord userRecord, String password) {
         return passwordEncoder.matches(password, userRecord.getPassword());
 
+    }
+    
+    private boolean checkIfPasswordIsValid(CreateUserRequest request){
+        if (request.getPassword().trim().isEmpty() || request.getPassword().length() <= 3){
+            return true;
+        }
+        return false;
     }
 }

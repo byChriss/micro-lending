@@ -4,26 +4,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 public class LoanRequest {
    
     @NotNull
-    private Long amount;
+    private BigDecimal amount;
     @NotNull
-    private Long term;
+    private Integer term;
     
     @JsonCreator
-    public LoanRequest(@JsonProperty("amount") Long amount,
-                       @JsonProperty("term") Long term) {
+    public LoanRequest(@JsonProperty("amount") BigDecimal amount,
+                       @JsonProperty("term") Integer term) {
         this.amount = amount;
         this.term = term;
     }
     
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Long getTerm() {
+    public Integer getTerm() {
         return term;
     }
 }

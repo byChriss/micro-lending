@@ -11,20 +11,14 @@ public class UserRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
     private String password;
-    private String firstName;
-    private String lastName;
     private String email;
 
     public UserRecord() {
     }
 
-    public UserRecord(String username, String password, String firstName, String lastName, String email) {
-        this.username = username;
+    public UserRecord(String password, String email) {
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.email = email;
     }
 
@@ -36,20 +30,8 @@ public class UserRecord {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public String getEmail() {

@@ -11,8 +11,8 @@ public class LoanRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long amount;
-    private Long term;
+    private BigDecimal amount;
+    private Integer term;
     private LocalDateTime approvalDate;
     private LocalDateTime repaymentDate;
     private BigDecimal extendAmount;
@@ -23,7 +23,7 @@ public class LoanRecord {
     public LoanRecord() {
     }
 
-    public LoanRecord(Long amount, Long term, LocalDateTime approvalDate, LocalDateTime repaymentDate, BigDecimal extendAmount, boolean status, UserRecord owner) {
+    public LoanRecord(BigDecimal amount, Integer term, LocalDateTime approvalDate, LocalDateTime repaymentDate, BigDecimal extendAmount, boolean status, UserRecord owner) {
         this.amount = amount;
         this.term = term;
         this.approvalDate = approvalDate;
@@ -37,32 +37,64 @@ public class LoanRecord {
         return id;
     }
 
-    public Long getAmount() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Long getTerm() {
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Integer getTerm() {
         return term;
+    }
+
+    public void setTerm(Integer term) {
+        this.term = term;
     }
 
     public LocalDateTime getApprovalDate() {
         return approvalDate;
     }
 
+    public void setApprovalDate(LocalDateTime approvalDate) {
+        this.approvalDate = approvalDate;
+    }
+
     public LocalDateTime getRepaymentDate() {
         return repaymentDate;
+    }
+
+    public void setRepaymentDate(LocalDateTime repaymentDate) {
+        this.repaymentDate = repaymentDate;
     }
 
     public BigDecimal getExtendAmount() {
         return extendAmount;
     }
 
+    public void setExtendAmount(BigDecimal extendAmount) {
+        this.extendAmount = extendAmount;
+    }
+
     public boolean isStatus() {
         return status;
     }
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     public UserRecord getOwner() {
         return owner;
+    }
+
+    public void setOwner(UserRecord owner) {
+        this.owner = owner;
     }
 
     @Override

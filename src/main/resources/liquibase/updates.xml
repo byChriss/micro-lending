@@ -11,16 +11,7 @@
             <column name="id" type="bigint" defaultValueSequenceNext="user_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
             </column>
-            <column name="username" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
             <column name="password" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="first_name" type="varchar(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(100)">
@@ -98,6 +89,24 @@
                                  onDelete="CASCADE"
         />
 
+    </changeSet>
+
+    <changeSet id="create application table" author="krists">
+        <createSequence sequenceName="application_seq"/>
+        <createTable tableName="applications">
+            <column name="id" type="bigint" defaultValueSequenceNext="application_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_application"/>
+            </column>
+            <column name="amount" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="term" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

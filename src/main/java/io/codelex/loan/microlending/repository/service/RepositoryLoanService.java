@@ -1,15 +1,16 @@
 package io.codelex.loan.microlending.repository.service;
 
 import io.codelex.loan.microlending.LoanService;
-import io.codelex.loan.microlending.api.Loan;
-import io.codelex.loan.microlending.api.LoanExtension;
-import io.codelex.loan.microlending.api.LoanRequest;
+import io.codelex.loan.microlending.api.*;
 
+import io.codelex.loan.microlending.repository.ApplicationRecordRepository;
 import io.codelex.loan.microlending.repository.LoanExtensionRecordRepository;
 import io.codelex.loan.microlending.repository.LoanRecordRepository;
 import io.codelex.loan.microlending.repository.UserRecordRepository;
+import io.codelex.loan.microlending.repository.mapper.MapApplicationRecordToApplication;
 import io.codelex.loan.microlending.repository.mapper.MapExtensionRecordToExtension;
 import io.codelex.loan.microlending.repository.mapper.MapLoanRecordToLoan;
+import io.codelex.loan.microlending.repository.model.ApplicationRecord;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import io.codelex.loan.microlending.repository.model.UserRecord;
@@ -18,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -29,26 +28,31 @@ public class RepositoryLoanService implements LoanService {
     private final LoanRecordRepository loanRecordRepository;
     private final LoanExtensionRecordRepository extensionRecordRepository;
     private final UserRecordRepository userRecordRepository;
+    private final ApplicationRecordRepository applicationRecordRepository;
     private final MapLoanRecordToLoan toLoan = new MapLoanRecordToLoan();
     private final MapExtensionRecordToExtension toExtension = new MapExtensionRecordToExtension();
+    private final MapApplicationRecordToApplication toApplication = new MapApplicationRecordToApplication();
     private RepositoryInterestFactorService interestFactorService = new RepositoryInterestFactorService();
     private RepositoryIpService ipService = new RepositoryIpService();
     private ClockTime clockTime;
+    private Constraints constraints;
 
 
     public RepositoryLoanService(
             LoanRecordRepository loanRecordRepository,
             LoanExtensionRecordRepository extensionRecordRepository,
-            UserRecordRepository userRecordRepository, ClockTime clockTime) {
+            UserRecordRepository userRecordRepository, ApplicationRecordRepository applicationRecordRepository, ClockTime clockTime) {
         this.loanRecordRepository = loanRecordRepository;
         this.extensionRecordRepository = extensionRecordRepository;
         this.userRecordRepository = userRecordRepository;
+        this.applicationRecordRepository = applicationRecordRepository;
         this.clockTime = clockTime;
     }
 
+
     @Override
-    public Loan createLoan(String owner, LoanRequest request, HttpServletRequest servletRequest) {
-        ipService.addIp(servletRequest);
+    public Loan createLoan(String owner, LoanRequest request/*, HttpServletRequest servletRequest*/) {
+    /*    ipService.addIp(servletRequest);
         UserRecord currentUser = userRecordRepository.findByEmail(owner);
 
         if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)
@@ -57,21 +61,19 @@ public class RepositoryLoanService implements LoanService {
             throw new IllegalStateException();
         } else if (!checkIfTermIsValid(request) && checkIfAmountIsValid(request)) {
             throw new InvalidParameterException("Invalid term or amount");
-        } else {
-            UserRecord userRecord = userRecordRepository.findByEmail(owner);
-
-            LoanRecord loanRecord = new LoanRecord(
-                    request.getAmount(),
-                    request.getTerm(),
-                    clockTime.getTime(),
-                    clockTime.getTime().plusDays(request.getTerm()),
-                    interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
-                    true,
-                    userRecord
-            );
-            loanRecord = loanRecordRepository.save(loanRecord);
-            return toLoan.apply(loanRecord);
-        }
+        } else {*/
+        UserRecord userRecord = userRecordRepository.findByEmail(owner);
+        LoanRecord loanRecord = new LoanRecord(
+                request.getAmount(),
+                request.getTerm(),
+                clockTime.getTime(),
+                clockTime.getTime().plusDays(request.getTerm()),
+                interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
+                true,
+                userRecord
+        );
+        loanRecord = loanRecordRepository.save(loanRecord);
+        return toLoan.apply(loanRecord);
     }
 
 
@@ -109,6 +111,36 @@ public class RepositoryLoanService implements LoanService {
         return toExtension.apply(extensionRecord);
     }
 
+    public Application checkApplication(LoanRequest request, HttpServletRequest servletRequest, String owner) {
+        ipService.addIp(servletRequest);
+        UserRecord currentUser = userRecordRepository.findByEmail(owner);
+        if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)
+                || ipService.maxAttemptsFromIpReached()
+                || checkIfTimeIsValid() || checkIfTermIsValid(request) || checkIfAmountIsValid(request)) {
+
+            ApplicationRecord record = new ApplicationRecord(
+                    request.getAmount(),
+                    request.getTerm(),
+                    Status.REJECTED
+            );
+
+            record = applicationRecordRepository.save(record);
+            return toApplication.apply(record);
+
+
+        } else {
+            ApplicationRecord applicationRecord = new ApplicationRecord(
+                    request.getAmount(),
+                    request.getTerm(),
+                    Status.APPROVED
+
+            );
+            applicationRecord = applicationRecordRepository.save(applicationRecord);
+            return toApplication.apply(applicationRecord);
+        }
+    }
+
+
     @Override
     public List<LoanRecord> findLoanByUserEmail(String owner) {
         UserRecord userRecord = userRecordRepository.findByEmail(owner);
@@ -130,16 +162,16 @@ public class RepositoryLoanService implements LoanService {
     }
 
     private boolean checkIfTermIsValid(LoanRequest request) {
-        if (request.getTerm() == 7 || request.getTerm() == 30) {
+        if (request.getTerm() < 7 || request.getTerm() > 30) {
             return true;
         }
         return false;
     }
 
     private boolean checkIfAmountIsValid(LoanRequest request) {
-        if (request.getAmount() > 100 || request.getAmount() < 500) {
-            return true;
-        }
-        return false;
+        constraints = constraints.setConstraints();
+        return request.getAmount().compareTo(constraints.getMinAmount()) < 0
+                || request.getAmount().compareTo(constraints.getMaxAmount()) > 0;
     }
+
 }

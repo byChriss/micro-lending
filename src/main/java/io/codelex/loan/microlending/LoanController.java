@@ -3,6 +3,7 @@ package io.codelex.loan.microlending;
 import io.codelex.loan.microlending.api.Loan;
 import io.codelex.loan.microlending.api.LoanRequest;
 
+import io.codelex.loan.microlending.api.Status;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,23 @@ public class LoanController {
         this.service = service;
     }
 
+    @GetMapping("/constraints")
+    public ResponseEntity constraints(){
+        return null;
+    }
 
-    @PostMapping("/loans")
+    @PostMapping("/loans/apply")
     public ResponseEntity<Loan> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
-        try {
-            return new ResponseEntity<>(service.createLoan(principal.getName(), request, httpRequest), HttpStatus.ACCEPTED);
-        }catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }catch (InvalidParameterException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(service.checkApplication(request,httpRequest, principal.getName()).getStatus() == Status.APPROVED){
+            try {
+                return new ResponseEntity<>(service.createLoan(principal.getName(), request), HttpStatus.OK);
+            }catch (IllegalStateException e) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }catch (InvalidParameterException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
+      return null;
     }
 
     @PostMapping("/loans/{id}/extend")
@@ -48,7 +56,7 @@ public class LoanController {
         return new ResponseEntity<>(service.getLoansWithExtensions(id), HttpStatus.OK);
     }
 
-    @GetMapping("/loans/all")
+    @GetMapping("/loans")
     public ResponseEntity<List<LoanRecord>> getActualLoansForUser(Principal principal) {
         return new ResponseEntity<>(service.findLoanByUserEmail(principal.getName()), HttpStatus.OK);
     }
