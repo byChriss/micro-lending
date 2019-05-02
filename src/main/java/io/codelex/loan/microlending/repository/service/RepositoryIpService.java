@@ -44,7 +44,7 @@ public class RepositoryIpService implements IpService {
                 }
             }
         }
-        if (equalIpCounter < 3) {
+        if (equalIpCounter > 3) {
             return true;
         }
         return false;

@@ -8,12 +8,13 @@ import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 
 public interface LoanService {
 
-    Loan createLoan(String owner, LoanRequest request/*, HttpServletRequest servletRequest*/);
+    Loan createLoan(Principal principal, LoanRequest request, HttpServletRequest servletRequest);
 
     Loan findByIdAndExtend(Long id, Long days);
 
@@ -22,6 +23,6 @@ public interface LoanService {
     List<LoanRecord> findLoanByUserEmail(String owner);
 
     List<ExtensionRecord> getLoansWithExtensions(Long id);
+   
     Application checkApplication(LoanRequest request, HttpServletRequest servletRequest, String owner);
-    
 }

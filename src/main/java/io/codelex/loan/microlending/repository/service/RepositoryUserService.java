@@ -26,11 +26,8 @@ public class RepositoryUserService implements UserService {
 
     @Override
     public User createUser(CreateUserRequest request) {
-        if (userRecordRepository.isUserPresent(request.getEmail())) {
+        if (userRecordRepository.isUserPresent(request.getEmail()) || checkIfPasswordIsValid(request) ) {
             throw new IllegalArgumentException("username is taken");
-        }
-        if(checkIfPasswordIsValid(request)){
-            throw new IllegalArgumentException("Invalid password content");
         }
             UserRecord userRecord = new UserRecord(
                     passwordEncoder.encode(request.getPassword()),

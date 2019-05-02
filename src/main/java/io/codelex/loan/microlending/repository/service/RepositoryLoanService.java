@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
+import java.security.Principal;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -51,29 +52,22 @@ public class RepositoryLoanService implements LoanService {
 
 
     @Override
-    public Loan createLoan(String owner, LoanRequest request/*, HttpServletRequest servletRequest*/) {
-    /*    ipService.addIp(servletRequest);
-        UserRecord currentUser = userRecordRepository.findByEmail(owner);
-
-        if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)
-                || ipService.maxAttemptsFromIpReached()
-                || checkIfTimeIsValid()) {
-            throw new IllegalStateException();
-        } else if (!checkIfTermIsValid(request) && checkIfAmountIsValid(request)) {
-            throw new InvalidParameterException("Invalid term or amount");
-        } else {*/
-        UserRecord userRecord = userRecordRepository.findByEmail(owner);
-        LoanRecord loanRecord = new LoanRecord(
-                request.getAmount(),
-                request.getTerm(),
-                clockTime.getTime(),
-                clockTime.getTime().plusDays(request.getTerm()),
-                interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getTerm()),
-                true,
-                userRecord
-        );
-        loanRecord = loanRecordRepository.save(loanRecord);
-        return toLoan.apply(loanRecord);
+    public Loan createLoan(Principal principal, LoanRequest request, HttpServletRequest servletRequest) {
+        UserRecord userRecord = userRecordRepository.findByEmail(principal.getName());
+        if (checkApplication(request, servletRequest, principal.getName()).getStatus() == Status.APPROVED) {
+            LoanRecord loanRecord = new LoanRecord(
+                    request.getAmount(),
+                    request.getDays(),
+                    clockTime.getTime(),
+                    clockTime.getTime().plusDays(request.getDays()),
+                    interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getDays()),
+                    true,
+                    userRecord
+            );
+            loanRecord = loanRecordRepository.save(loanRecord);
+            return toLoan.apply(loanRecord);
+        }
+        throw new IllegalStateException();
     }
 
 
@@ -114,24 +108,23 @@ public class RepositoryLoanService implements LoanService {
     public Application checkApplication(LoanRequest request, HttpServletRequest servletRequest, String owner) {
         ipService.addIp(servletRequest);
         UserRecord currentUser = userRecordRepository.findByEmail(owner);
-        if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)
-                || ipService.maxAttemptsFromIpReached()
-                || checkIfTimeIsValid() || checkIfTermIsValid(request) || checkIfAmountIsValid(request)) {
-
+        if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)) {
+            throw new IllegalStateException();
+        }
+        if (ipService.maxAttemptsFromIpReached() || checkIfTimeIsValid() || checkIfTermIsValid(request) || checkIfAmountIsValid(request)) {
             ApplicationRecord record = new ApplicationRecord(
                     request.getAmount(),
-                    request.getTerm(),
+                    request.getDays(),
                     Status.REJECTED
             );
-
             record = applicationRecordRepository.save(record);
             return toApplication.apply(record);
 
 
-        } else {
+        } else{
             ApplicationRecord applicationRecord = new ApplicationRecord(
                     request.getAmount(),
-                    request.getTerm(),
+                    request.getDays(),
                     Status.APPROVED
 
             );
@@ -162,14 +155,14 @@ public class RepositoryLoanService implements LoanService {
     }
 
     private boolean checkIfTermIsValid(LoanRequest request) {
-        if (request.getTerm() < 7 || request.getTerm() > 30) {
+        if (request.getDays() < 7 || request.getDays() > 30) {
             return true;
         }
         return false;
     }
 
     private boolean checkIfAmountIsValid(LoanRequest request) {
-        constraints = constraints.setConstraints();
+      
         return request.getAmount().compareTo(constraints.getMinAmount()) < 0
                 || request.getAmount().compareTo(constraints.getMaxAmount()) > 0;
     }

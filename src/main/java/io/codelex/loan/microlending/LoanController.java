@@ -1,9 +1,7 @@
 package io.codelex.loan.microlending;
 
-import io.codelex.loan.microlending.api.Loan;
-import io.codelex.loan.microlending.api.LoanRequest;
+import io.codelex.loan.microlending.api.*;
 
-import io.codelex.loan.microlending.api.Status;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 import io.codelex.loan.microlending.repository.model.LoanRecord;
 import org.springframework.http.HttpStatus;
@@ -23,27 +21,25 @@ public class LoanController {
 
     private final LoanService service;
 
+
     public LoanController(LoanService service) {
         this.service = service;
+
     }
 
     @GetMapping("/constraints")
-    public ResponseEntity constraints(){
+    public ResponseEntity<Constraints> constraints() {
+
         return null;
     }
 
     @PostMapping("/loans/apply")
-    public ResponseEntity<Loan> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
-        if(service.checkApplication(request,httpRequest, principal.getName()).getStatus() == Status.APPROVED){
-            try {
-                return new ResponseEntity<>(service.createLoan(principal.getName(), request), HttpStatus.OK);
-            }catch (IllegalStateException e) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }catch (InvalidParameterException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+    public ResponseEntity<Application> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
+        Application application = service.checkApplication(request, httpRequest, principal.getName());
+        if (application.getStatus() == Status.APPROVED) {
+            return new ResponseEntity<>(application, HttpStatus.OK);
         }
-      return null;
+        return null;
     }
 
     @PostMapping("/loans/{id}/extend")
@@ -60,5 +56,4 @@ public class LoanController {
     public ResponseEntity<List<LoanRecord>> getActualLoansForUser(Principal principal) {
         return new ResponseEntity<>(service.findLoanByUserEmail(principal.getName()), HttpStatus.OK);
     }
-
 }

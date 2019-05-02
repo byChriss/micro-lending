@@ -10,6 +10,7 @@ public class Constraints {
     private Integer minExtensionDays;
     private Integer maxExtensionDays;
 
+    
     public Constraints(BigDecimal minAmount, BigDecimal maxAmount, Integer minTermDays, Integer maxTermDays, Integer minExtensionDays, Integer maxExtensionDays) {
         this.minAmount = minAmount;
         this.maxAmount = maxAmount;

@@ -11,20 +11,20 @@ public class LoanRequest {
     @NotNull
     private BigDecimal amount;
     @NotNull
-    private Integer term;
+    private Integer days;
     
     @JsonCreator
     public LoanRequest(@JsonProperty("amount") BigDecimal amount,
-                       @JsonProperty("term") Integer term) {
+                       @JsonProperty("days") Integer days) {
         this.amount = amount;
-        this.term = term;
+        this.days = days;
     }
-    
+
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public Integer getTerm() {
-        return term;
+    public Integer getDays() {
+        return days;
     }
 }

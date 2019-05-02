@@ -6,15 +6,15 @@ import java.time.LocalDateTime;
 public class Loan {
 
     private Long id;
-    private Long amount;
-    private Long term;
+    private BigDecimal amount;
+    private Integer term;
     private LocalDateTime approvalDate;
     private LocalDateTime repaymentsDate;
     private BigDecimal extendAmount;
     private User owner;
     private boolean status;
 
-    public Loan(Long id, Long amount, Long term, LocalDateTime approvalDate, LocalDateTime repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
+    public Loan(Long id, BigDecimal amount, Integer term, LocalDateTime approvalDate, LocalDateTime repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
@@ -33,19 +33,19 @@ public class Loan {
         this.id = id;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getTerm() {
+    public Integer getTerm() {
         return term;
     }
 
-    public void setTerm(Long term) {
+    public void setTerm(Integer term) {
         this.term = term;
     }
 
