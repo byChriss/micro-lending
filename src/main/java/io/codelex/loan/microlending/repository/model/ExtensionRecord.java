@@ -1,7 +1,8 @@
 package io.codelex.loan.microlending.repository.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -10,22 +11,20 @@ public class ExtensionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long extendDays;
-    private LocalDateTime extensionDate;
-    private LocalDateTime paybackDate;
+    private LocalDate created;
+    private Integer days;
+    private BigDecimal interest;
     @ManyToOne
     private LoanRecord loanId;
-    private boolean status;
 
     public ExtensionRecord() {
     }
 
-    public ExtensionRecord(Long extendDays, LocalDateTime extensionDate, LocalDateTime paybackDate, LoanRecord loanId, boolean status) {
-        this.extendDays = extendDays;
-        this.extensionDate = extensionDate;
-        this.paybackDate = paybackDate;
+    public ExtensionRecord(LocalDate created, Integer days, BigDecimal interest, LoanRecord loanId) {
+        this.created = created;
+        this.days = days;
+        this.interest = interest;
         this.loanId = loanId;
-        this.status = status;
     }
 
     public Long getId() {
@@ -36,24 +35,36 @@ public class ExtensionRecord {
         this.id = id;
     }
 
-    public Long getExtendDays() {
-        return extendDays;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public LocalDateTime getExtensionDate() {
-        return extensionDate;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
-    public LocalDateTime getPaybackDate() {
-        return paybackDate;
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
+    }
+
+    public BigDecimal getInterest() {
+        return interest;
+    }
+
+    public void setInterest(BigDecimal interest) {
+        this.interest = interest;
     }
 
     public LoanRecord getLoanId() {
         return loanId;
     }
 
-    public boolean isStatus() {
-        return status;
+    public void setLoanId(LoanRecord loanId) {
+        this.loanId = loanId;
     }
 
     @Override

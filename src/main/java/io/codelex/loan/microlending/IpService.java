@@ -9,7 +9,7 @@ public interface IpService{
 
     String getClientIp(HttpServletRequest servletRequest);
     
-    boolean maxAttemptsFromIpReached();
+    boolean maxAttemptsFromIpNotReached();
     
     @Scheduled(cron = "0 0 * * * *")
     void removeAttemptsAfterDay();

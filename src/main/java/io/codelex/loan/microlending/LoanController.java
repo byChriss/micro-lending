@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.InvalidParameterException;
 import java.security.Principal;
 import java.util.List;
 
@@ -29,21 +28,29 @@ public class LoanController {
 
     @GetMapping("/constraints")
     public ResponseEntity<Constraints> constraints() {
-
-        return null;
+        Constraints constraints = service.setConstraints();
+        return new ResponseEntity<>(constraints, HttpStatus.OK);
     }
 
     @PostMapping("/loans/apply")
-    public ResponseEntity<Application> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
-        Application application = service.checkApplication(request, httpRequest, principal.getName());
-        if (application.getStatus() == Status.APPROVED) {
-            return new ResponseEntity<>(application, HttpStatus.OK);
+    public ResponseEntity<Status> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
+        try {
+            Application application = service.checkApplication(principal, request, httpRequest);
+            ApplicationResponse response = new ApplicationResponse(application.getStatus());
+
+            Status status = application.getStatus();
+            return new ResponseEntity<>(status, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }catch (IllegalArgumentException x){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return null;
+
+
     }
 
     @PostMapping("/loans/{id}/extend")
-    public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Long days) {
+    public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Integer days) {
         return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
     }
 

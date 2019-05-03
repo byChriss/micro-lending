@@ -10,7 +10,7 @@ public class Constraints {
     private Integer minExtensionDays;
     private Integer maxExtensionDays;
 
-    
+
     public Constraints(BigDecimal minAmount, BigDecimal maxAmount, Integer minTermDays, Integer maxTermDays, Integer minExtensionDays, Integer maxExtensionDays) {
         this.minAmount = minAmount;
         this.maxAmount = maxAmount;
@@ -24,34 +24,47 @@ public class Constraints {
         return minAmount;
     }
 
+    public void setMinAmount(BigDecimal minAmount) {
+        this.minAmount = minAmount;
+    }
+
     public BigDecimal getMaxAmount() {
         return maxAmount;
+    }
+
+    public void setMaxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
     }
 
     public Integer getMinTermDays() {
         return minTermDays;
     }
 
+    public void setMinTermDays(Integer minTermDays) {
+        this.minTermDays = minTermDays;
+    }
+
     public Integer getMaxTermDays() {
         return maxTermDays;
+    }
+
+    public void setMaxTermDays(Integer maxTermDays) {
+        this.maxTermDays = maxTermDays;
     }
 
     public Integer getMinExtensionDays() {
         return minExtensionDays;
     }
 
+    public void setMinExtensionDays(Integer minExtensionDays) {
+        this.minExtensionDays = minExtensionDays;
+    }
+
     public Integer getMaxExtensionDays() {
         return maxExtensionDays;
     }
 
-    public Constraints setConstraints(){
-        return new Constraints(
-                new BigDecimal (100),
-                new BigDecimal(500),
-                7,
-                30,
-                7,
-                30
-        );
+    public void setMaxExtensionDays(Integer maxExtensionDays) {
+        this.maxExtensionDays = maxExtensionDays;
     }
 }

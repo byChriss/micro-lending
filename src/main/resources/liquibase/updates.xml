@@ -27,22 +27,25 @@
             <column name="id" type="bigint" defaultValueSequenceNext="loan_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_loan"/>
             </column>
-            <column name="amount" type="decimal">
+            <column name="status" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="term" type="bigint">
+            <column name="created" type="timestamp without timezone">
                 <constraints nullable="false"/>
             </column>
-            <column name="approval_date" type="timestamp without timezone">
+            <column name="dueDate" type="timestamp without timezone">
                 <constraints nullable="false"/>
             </column>
-            <column name="repayment_date" type="timestamp without timezone">
+            <column name="principal" type="decimal">
                 <constraints nullable="false"/>
             </column>
-            <column name="extend_amount" type="decimal">
+            <column name="interest" type="decimal">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="boolean">
+            <column name="total" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extension" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
@@ -50,9 +53,9 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="loans"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_loans_user_id_users_id"
-                                 referencedTableName="users"
+                                 baseColumnNames="extension"
+                                 constraintName="fk_loans_extension_id_extensions_id"
+                                 referencedTableName="loans"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
         />
@@ -65,26 +68,23 @@
             <column name="id" type="bigint" defaultValueSequenceNext="extension_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_extension"/>
             </column>
-            <column name="extension_days" type="bigint">
+            <column name="created" type="timestamp without timezone">
                 <constraints nullable="false"/>
             </column>
-            <column name="extension_date" type="timestamp without timezone">
+            <column name="days" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="payback_date" type="timestamp without timezone">
+            <column name="interest" type="decimal">
                 <constraints nullable="false"/>
             </column>
             <column name="loan_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="extensions"
                                  baseColumnNames="loan_id"
                                  constraintName="fk_extensions_loan_id_loans_id"
-                                 referencedTableName="users"
+                                 referencedTableName="loans"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
         />

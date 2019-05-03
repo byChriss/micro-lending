@@ -1,22 +1,22 @@
 package io.codelex.loan.microlending.api;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class LoanExtension {
     private Long id;
-    private Long extensionDays;
-    private LocalDateTime extensionDate;
-    private LocalDateTime paybackDate;
+    private LocalDate created;
+    private Integer days;
+    private BigDecimal interest;
     private Loan loanId;
-    private boolean status;
 
-    public LoanExtension(Long id, Long extensionDays, LocalDateTime extensionDate, LocalDateTime paybackDate, Loan loanId, boolean status) {
+
+    public LoanExtension(Long id, LocalDate created, Integer days, BigDecimal interest, Loan loanId) {
         this.id = id;
-        this.extensionDays = extensionDays;
-        this.extensionDate = extensionDate;
-        this.paybackDate = paybackDate;
+        this.created = created;
+        this.days = days;
+        this.interest = interest;
         this.loanId = loanId;
-        this.status = status;
     }
 
     public Long getId() {
@@ -27,28 +27,28 @@ public class LoanExtension {
         this.id = id;
     }
 
-    public Long getExtensionDays() {
-        return extensionDays;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public void setExtensionDays(Long extensionDays) {
-        this.extensionDays = extensionDays;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
-    public LocalDateTime getExtensionDate() {
-        return extensionDate;
+    public Integer getDays() {
+        return days;
     }
 
-    public void setExtensionDate(LocalDateTime extensionDate) {
-        this.extensionDate = extensionDate;
+    public void setDays(Integer days) {
+        this.days = days;
     }
 
-    public LocalDateTime getPaybackDate() {
-        return paybackDate;
+    public BigDecimal getInterest() {
+        return interest;
     }
 
-    public void setPaybackDate(LocalDateTime paybackDate) {
-        this.paybackDate = paybackDate;
+    public void setInterest(BigDecimal interest) {
+        this.interest = interest;
     }
 
     public Loan getLoanId() {
@@ -57,13 +57,5 @@ public class LoanExtension {
 
     public void setLoanId(Loan loanId) {
         this.loanId = loanId;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 }

@@ -1,8 +1,10 @@
 package io.codelex.loan.microlending.repository.model;
+import io.codelex.loan.microlending.api.LoanStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,83 +12,91 @@ import java.util.Objects;
 public class LoanRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private BigDecimal amount;
-    private Integer term;
-    private LocalDateTime approvalDate;
-    private LocalDateTime repaymentDate;
-    private BigDecimal extendAmount;
-    private boolean status;
-    @ManyToOne
+    private String id;
+    private LoanStatus status;
+    private LocalDate created;
+    private LocalDate dueDate;
+    private BigDecimal principal;
+    private BigDecimal interest;
+    private BigDecimal total;
+    @OneToMany
+    private List<ExtensionRecord> extensions;
     private UserRecord owner;
 
-    public LoanRecord() {
-    }
 
-    public LoanRecord(BigDecimal amount, Integer term, LocalDateTime approvalDate, LocalDateTime repaymentDate, BigDecimal extendAmount, boolean status, UserRecord owner) {
-        this.amount = amount;
-        this.term = term;
-        this.approvalDate = approvalDate;
-        this.repaymentDate = repaymentDate;
-        this.extendAmount = extendAmount;
+    public LoanRecord(LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<ExtensionRecord> extensions, UserRecord owner) {
         this.status = status;
+        this.created = created;
+        this.dueDate = dueDate;
+        this.principal = principal;
+        this.interest = interest;
+        this.total = total;
+        this.extensions = extensions;
         this.owner = owner;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public Integer getTerm() {
-        return term;
-    }
-
-    public void setTerm(Integer term) {
-        this.term = term;
-    }
-
-    public LocalDateTime getApprovalDate() {
-        return approvalDate;
-    }
-
-    public void setApprovalDate(LocalDateTime approvalDate) {
-        this.approvalDate = approvalDate;
-    }
-
-    public LocalDateTime getRepaymentDate() {
-        return repaymentDate;
-    }
-
-    public void setRepaymentDate(LocalDateTime repaymentDate) {
-        this.repaymentDate = repaymentDate;
-    }
-
-    public BigDecimal getExtendAmount() {
-        return extendAmount;
-    }
-
-    public void setExtendAmount(BigDecimal extendAmount) {
-        this.extendAmount = extendAmount;
-    }
-
-    public boolean isStatus() {
+    public LoanStatus getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(LoanStatus status) {
         this.status = status;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public BigDecimal getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(BigDecimal principal) {
+        this.principal = principal;
+    }
+
+    public BigDecimal getInterest() {
+        return interest;
+    }
+
+    public void setInterest(BigDecimal interest) {
+        this.interest = interest;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public List<ExtensionRecord> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(List<ExtensionRecord> extensions) {
+        this.extensions = extensions;
     }
 
     public UserRecord getOwner() {

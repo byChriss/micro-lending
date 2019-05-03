@@ -1,76 +1,100 @@
 package io.codelex.loan.microlending.api;
 
+import io.codelex.loan.microlending.repository.model.ExtensionRecord;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 public class Loan {
 
-    private Long id;
-    private BigDecimal amount;
-    private Integer term;
-    private LocalDateTime approvalDate;
-    private LocalDateTime repaymentsDate;
-    private BigDecimal extendAmount;
+    private String id;
+    private LoanStatus status;
+    private LocalDate created;
+    private LocalDate dueDate;
+    private BigDecimal principal;
+    private BigDecimal interest;
+    private BigDecimal total;
+    private List<LoanExtension> extensions;
     private User owner;
-    private boolean status;
 
-    public Loan(Long id, BigDecimal amount, Integer term, LocalDateTime approvalDate, LocalDateTime repaymentsDate, BigDecimal extendAmount, User owner, boolean status) {
+
+    public Loan(String id, LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<LoanExtension> extensions, User owner) {
         this.id = id;
-        this.amount = amount;
-        this.term = term;
-        this.approvalDate = approvalDate;
-        this.repaymentsDate = repaymentsDate;
-        this.extendAmount = extendAmount;
-        this.owner = owner;
         this.status = status;
+        this.created = created;
+        this.dueDate = dueDate;
+        this.principal = principal;
+        this.interest = interest;
+        this.total = total;
+        this.extensions = extensions;
+        this.owner = owner;
     }
 
-    public Long getId() {
+
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public LoanStatus getStatus() {
+        return status;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setStatus(LoanStatus status) {
+        this.status = status;
     }
 
-    public Integer getTerm() {
-        return term;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public void setTerm(Integer term) {
-        this.term = term;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
-    public LocalDateTime getApprovalDate() {
-        return approvalDate;
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
-    public void setApprovalDate(LocalDateTime approvalDate) {
-        this.approvalDate = approvalDate;
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public LocalDateTime getRepaymentsDate() {
-        return repaymentsDate;
+    public BigDecimal getPrincipal() {
+        return principal;
     }
 
-    public void setRepaymentsDate(LocalDateTime repaymentsDate) {
-        this.repaymentsDate = repaymentsDate;
+    public void setPrincipal(BigDecimal principal) {
+        this.principal = principal;
     }
 
-    public BigDecimal getExtendAmount() {
-        return extendAmount;
+    public BigDecimal getInterest() {
+        return interest;
     }
 
-    public void setExtendAmount(BigDecimal extendAmount) {
-        this.extendAmount = extendAmount;
+    public void setInterest(BigDecimal interest) {
+        this.interest = interest;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public List<LoanExtension> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(List<LoanExtension> extensions) {
+        this.extensions = extensions;
     }
 
     public User getOwner() {
@@ -79,13 +103,5 @@ public class Loan {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 }

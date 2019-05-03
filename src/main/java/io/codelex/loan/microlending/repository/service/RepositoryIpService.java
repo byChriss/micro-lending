@@ -34,7 +34,7 @@ public class RepositoryIpService implements IpService {
     }
 
     @Override
-    public boolean maxAttemptsFromIpReached() {
+    public boolean maxAttemptsFromIpNotReached() {
         for (int i = equalIpCounter; i < ipList.size(); i++) {
             String part1 = ipList.get(i);
             for (int j = i + 1; j < ipList.size(); j++) {
@@ -44,7 +44,7 @@ public class RepositoryIpService implements IpService {
                 }
             }
         }
-        if (equalIpCounter > 3) {
+        if (equalIpCounter < 3) {
             return true;
         }
         return false;
