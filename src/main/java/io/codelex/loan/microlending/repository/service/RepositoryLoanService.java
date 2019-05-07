@@ -19,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -52,13 +54,18 @@ public class RepositoryLoanService implements LoanService {
     }
 
 
+    public String gen() {
+        Random r = new Random(System.currentTimeMillis());
+        String id = String.valueOf(((1 + r.nextInt(4)) * 10000000 + r.nextInt(10000000)));
+        return id.substring(0, 4) + "-" + id.substring(4);
+    }
+
     @Override
     public Loan createLoan(Principal principal, LoanRequest request, HttpServletRequest servletRequest) {
         UserRecord userRecord = userRecordRepository.findByEmail(principal.getName());
-        String uniqueID = UUID.randomUUID().toString();
         List<ExtensionRecord> extensionRecords = new ArrayList<>();
         LoanRecord loanRecord = new LoanRecord(
-                uniqueID,
+                gen(),
                 LoanStatus.OPEN,
                 clockTime.getTime().toLocalDate(),
                 clockTime.getTime().toLocalDate().plusDays(request.getDays()),
@@ -86,8 +93,6 @@ public class RepositoryLoanService implements LoanService {
             createLoan(principal, request, servletRequest);
             record = applicationRecordRepository.save(record);
             return toApplication.apply(record);
-        } else if (!checkIfTermIsValid(request) || checkIfAmountIsValid(request) || ipService.maxAttemptsFromIpNotReached() || checkIfTimeIsValid(clockTime)) {
-            throw new IllegalArgumentException();
         }
         ApplicationRecord applicationRecord = new ApplicationRecord(
                 request.getAmount(),
@@ -97,19 +102,14 @@ public class RepositoryLoanService implements LoanService {
         );
         applicationRecord = applicationRecordRepository.save(applicationRecord);
         return toApplication.apply(applicationRecord);
+
     }
 
     @Override
     public Loan findByIdAndExtend(String id, Integer days) {
         if (loanRecordRepository.isLoanPresent(id)) {
-            if (days == 7) {
-                loanRecordRepository.updateRepaymentDateByWeek(id);
-                createLoanExtension(id, days);
-                LoanRecord record = loanRecordRepository.findLoanById(id);
-
-                return toLoan.apply(record);
-            } else if (days == 30) {
-                loanRecordRepository.updateRepaymentDateByMonth(id);
+            if (days == 7 || days == 14 || days == 30) {
+                loanRecordRepository.updateRepaymentDateByWeek(id, days);
                 createLoanExtension(id, days);
                 LoanRecord record = loanRecordRepository.findLoanById(id);
 

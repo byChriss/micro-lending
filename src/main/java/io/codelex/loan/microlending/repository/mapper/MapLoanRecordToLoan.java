@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class MapLoanRecordToLoan implements Function<LoanRecord, Loan> {
     private MapExtensionRecordToExtension toExtension = new MapExtensionRecordToExtension();
-    
+
 
     @Override
     public Loan apply(LoanRecord loanRecord) {
@@ -23,6 +23,6 @@ public class MapLoanRecordToLoan implements Function<LoanRecord, Loan> {
                 loanRecord.getInterest(),
                 loanRecord.getTotal(),
                 loanRecord.getExtensions().stream().map(toExtension).collect(Collectors.toList()));
-                
+
     }
 }

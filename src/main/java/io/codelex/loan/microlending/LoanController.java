@@ -37,14 +37,18 @@ public class LoanController {
     public ResponseEntity<ApplicationResponse> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
         try {
             Application application = service.checkApplication(principal, request, httpRequest);
-            ApplicationResponse response = new ApplicationResponse(application.getStatus());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            if(application.getStatus().equals(Status.APPROVED)){
+                ApplicationResponse response = new ApplicationResponse(application.getStatus());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }else if(application.getStatus().equals(Status.REJECTED)){
+                ApplicationResponse response = new ApplicationResponse(application.getStatus());
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } catch (IllegalArgumentException x) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        return null;
     }
 
     @PostMapping("/loans/{id}/extend")

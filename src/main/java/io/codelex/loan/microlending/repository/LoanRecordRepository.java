@@ -20,14 +20,9 @@ public interface LoanRecordRepository extends JpaRepository<LoanRecord, String> 
     boolean isLoanPresent(@Param("id") String id);
 
     @Modifying
-    @Query("update LoanRecord loan Set loan.dueDate = loan.dueDate + 7"
+    @Query("update LoanRecord loan Set loan.dueDate = loan.dueDate + :days"
             + " where loan.id = :id")
-    void updateRepaymentDateByWeek(@Param("id") String id);
-
-    @Modifying
-    @Query("update LoanRecord loan Set loan.dueDate = loan.dueDate + 30"
-            + " where loan.id = :id")
-    void updateRepaymentDateByMonth(@Param("id") String id);
+    void updateRepaymentDateByWeek(@Param("id") String id, @Param("days") Integer days);
 
     @Query("select loan from LoanRecord  loan"
             + " where loan.id = :id")
