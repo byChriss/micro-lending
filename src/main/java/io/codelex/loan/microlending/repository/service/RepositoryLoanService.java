@@ -23,6 +23,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Component
@@ -54,14 +55,17 @@ public class RepositoryLoanService implements LoanService {
     @Override
     public Loan createLoan(Principal principal, LoanRequest request, HttpServletRequest servletRequest) {
         UserRecord userRecord = userRecordRepository.findByEmail(principal.getName());
+        String uniqueID = UUID.randomUUID().toString();
+        List<ExtensionRecord> extensionRecords = new ArrayList<>();
         LoanRecord loanRecord = new LoanRecord(
+                uniqueID,
                 LoanStatus.OPEN,
-                LocalDate.now(),
-                LocalDate.now().plusDays(request.getDays()),
+                clockTime.getTime().toLocalDate(),
+                clockTime.getTime().toLocalDate().plusDays(request.getDays()),
                 request.getAmount(),
                 interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getDays()),
                 request.getAmount().add(interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getDays())),
-                null,
+                extensionRecords,
                 userRecord
         );
         loanRecord = loanRecordRepository.save(loanRecord);
@@ -84,7 +88,6 @@ public class RepositoryLoanService implements LoanService {
             return toApplication.apply(record);
         } else if (!checkIfTermIsValid(request) || checkIfAmountIsValid(request) || ipService.maxAttemptsFromIpNotReached() || checkIfTimeIsValid(clockTime)) {
             throw new IllegalArgumentException();
-
         }
         ApplicationRecord applicationRecord = new ApplicationRecord(
                 request.getAmount(),
@@ -97,7 +100,7 @@ public class RepositoryLoanService implements LoanService {
     }
 
     @Override
-    public Loan findByIdAndExtend(Long id, Integer days) {
+    public Loan findByIdAndExtend(String id, Integer days) {
         if (loanRecordRepository.isLoanPresent(id)) {
             if (days == 7) {
                 loanRecordRepository.updateRepaymentDateByWeek(id);
@@ -117,24 +120,33 @@ public class RepositoryLoanService implements LoanService {
     }
 
     @Override
-    public LoanExtension createLoanExtension(Long id, Integer days) {
+    public LoanExtension createLoanExtension(String id, Integer days) {
         LoanRecord record = loanRecordRepository.findLoanById(id);
         ExtensionRecord extensionRecord = new ExtensionRecord(
-             LocalDate.now(),
+                clockTime.getTime().toLocalDate(),
                 days,
-                interestFactorService.extendLoanInterestFactor(record.getPrincipal(),days),
+                interestFactorService.extendLoanInterestFactor(record.getPrincipal(), days),
                 record
 
         );
+        record.getExtensions().add(extensionRecord);
         extensionRecord = extensionRecordRepository.save(extensionRecord);
         return toExtension.apply(extensionRecord);
     }
 
-
+    // delete if no use ... ? 
     @Override
     public List<LoanRecord> findLoanByUserEmail(String owner) {
         UserRecord userRecord = userRecordRepository.findByEmail(owner);
         return new ArrayList<>(loanRecordRepository.findLoanWithCurrentUser(userRecord));
+    }
+
+    public List<Loan> findLoan(String owner) {
+        UserRecord userRecord = userRecordRepository.findByEmail(owner);
+        return loanRecordRepository.findLoanWithCurrentUser(userRecord)
+                .stream()
+                .map(toLoan)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -161,11 +173,10 @@ public class RepositoryLoanService implements LoanService {
 
     private boolean checkIfAmountIsValid(LoanRequest request) {
         Constraints constraints = setConstraints();
-        int res;
-        int res2;
-        res = request.getAmount().compareTo(constraints.getMinAmount());
-        res2 = request.getAmount().compareTo(constraints.getMaxAmount());
-        return res == 1 && res2 == -1 || res == 0 || res2 == 0;
+
+        int res = request.getAmount().compareTo(constraints.getMinAmount());
+        int res2 = request.getAmount().compareTo(constraints.getMaxAmount());
+        return res > 0 && res2 < 0 || res == 0 || res2 == 0;
     }
 
     public Constraints setConstraints() {
@@ -173,8 +184,8 @@ public class RepositoryLoanService implements LoanService {
                 new BigDecimal(100),
                 new BigDecimal(500),
                 7,
-                7,
                 30,
+                7,
                 30
         );
     }

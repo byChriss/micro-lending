@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -33,25 +34,27 @@ public class LoanController {
     }
 
     @PostMapping("/loans/apply")
-    public ResponseEntity<Status> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<ApplicationResponse> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
         try {
             Application application = service.checkApplication(principal, request, httpRequest);
             ApplicationResponse response = new ApplicationResponse(application.getStatus());
-
-            Status status = application.getStatus();
-            return new ResponseEntity<>(status, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }catch (IllegalArgumentException x){
+        } catch (IllegalArgumentException x) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
 
     }
 
     @PostMapping("/loans/{id}/extend")
-    public ResponseEntity<Loan> extendLoanRequest(@PathVariable Long id, @RequestParam Integer days) {
-        return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
+    public ResponseEntity<Loan> extendLoanRequest(@PathVariable String id, @RequestParam Integer days) {
+        try {
+            return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/loans/{id}/extensions")
@@ -60,7 +63,7 @@ public class LoanController {
     }
 
     @GetMapping("/loans")
-    public ResponseEntity<List<LoanRecord>> getActualLoansForUser(Principal principal) {
-        return new ResponseEntity<>(service.findLoanByUserEmail(principal.getName()), HttpStatus.OK);
+    public ResponseEntity<List<Loan>> getActualLoansForUser(Principal principal) {
+        return new ResponseEntity<>(service.findLoan(principal.getName()), HttpStatus.OK);
     }
 }

@@ -1,7 +1,5 @@
 package io.codelex.loan.microlending.api;
 
-import io.codelex.loan.microlending.repository.model.ExtensionRecord;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,10 +14,10 @@ public class Loan {
     private BigDecimal interest;
     private BigDecimal total;
     private List<LoanExtension> extensions;
-    private User owner;
+    
 
 
-    public Loan(String id, LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<LoanExtension> extensions, User owner) {
+    public Loan(String id, LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<LoanExtension> extensions) {
         this.id = id;
         this.status = status;
         this.created = created;
@@ -28,7 +26,7 @@ public class Loan {
         this.interest = interest;
         this.total = total;
         this.extensions = extensions;
-        this.owner = owner;
+       
     }
 
 
@@ -96,12 +94,5 @@ public class Loan {
     public void setExtensions(List<LoanExtension> extensions) {
         this.extensions = extensions;
     }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+    
 }

@@ -13,9 +13,9 @@ public interface LoanService {
 
     Loan createLoan(Principal principal, LoanRequest request, HttpServletRequest servletRequest);
 
-    Loan findByIdAndExtend(Long id, Integer days);
+    Loan findByIdAndExtend(String id, Integer days);
 
-    LoanExtension createLoanExtension(Long id, Integer days);
+    LoanExtension createLoanExtension(String id, Integer days);
 
     List<LoanRecord> findLoanByUserEmail(String owner);
 
@@ -24,4 +24,6 @@ public interface LoanService {
     Application checkApplication(Principal principal, LoanRequest request, HttpServletRequest servletRequest);
 
     Constraints setConstraints();
+
+    List<Loan> findLoan(String owner);
 }

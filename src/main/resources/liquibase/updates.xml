@@ -27,13 +27,13 @@
             <column name="id" type="bigint" defaultValueSequenceNext="loan_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_loan"/>
             </column>
-            <column name="status" type="varchar(100)">
+            <column name="status" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="created" type="timestamp without timezone">
+            <column name="created" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="dueDate" type="timestamp without timezone">
+            <column name="dueDate" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="principal" type="decimal">
@@ -48,13 +48,20 @@
             <column name="extension" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="bigint">
+            <column name="owner" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="loans"
                                  baseColumnNames="extension"
                                  constraintName="fk_loans_extension_id_extensions_id"
+                                 referencedTableName="loans"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+        />
+        <addForeignKeyConstraint baseTableName="loans"
+                                 baseColumnNames="owner"
+                                 constraintName="fk_loans_owner_users_id"
                                  referencedTableName="loans"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
@@ -68,10 +75,10 @@
             <column name="id" type="bigint" defaultValueSequenceNext="extension_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_extension"/>
             </column>
-            <column name="created" type="timestamp without timezone">
+            <column name="created" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="days" type="bigint">
+            <column name="days" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="interest" type="decimal">
@@ -100,10 +107,10 @@
             <column name="amount" type="decimal">
                 <constraints nullable="false"/>
             </column>
-            <column name="term" type="bigint">
+            <column name="term" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="varchar(255)">
+            <column name="status" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>

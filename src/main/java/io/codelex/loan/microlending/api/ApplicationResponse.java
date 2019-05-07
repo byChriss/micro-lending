@@ -6,4 +6,8 @@ public class ApplicationResponse {
     public ApplicationResponse(Status status) {
         this.status = status;
     }
+
+    public Status getStatus() {
+        return status;
+    }
 }

@@ -12,12 +12,12 @@ public class RepositoryInterestFactorService implements InterestFactorService {
     public BigDecimal extendLoanInterestFactor(BigDecimal amount, Integer term) {
         
         if (term == 7) {
-            return (amount.multiply(new BigDecimal(Math.pow(1 + 0.015, 7))).subtract(amount));
+            return (amount.multiply(new BigDecimal(Math.pow(1 + 0.015 / 100, 7))).subtract(amount));
         }
         if (term == 30) {
             return (amount.multiply(new BigDecimal(Math.pow(1 + 0.015, 7))).subtract(amount)).multiply(new BigDecimal(4));
         }
-        return null;
+        throw new IllegalStateException();
     }
 
 }

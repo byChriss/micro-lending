@@ -11,7 +11,6 @@ import java.util.Objects;
 @Table(name = "loans")
 public class LoanRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private LoanStatus status;
     private LocalDate created;
@@ -21,10 +20,14 @@ public class LoanRecord {
     private BigDecimal total;
     @OneToMany
     private List<ExtensionRecord> extensions;
+    @ManyToOne
     private UserRecord owner;
 
+    public LoanRecord() {
+    }
 
-    public LoanRecord(LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<ExtensionRecord> extensions, UserRecord owner) {
+    public LoanRecord(String id, LoanStatus status, LocalDate created, LocalDate dueDate, BigDecimal principal, BigDecimal interest, BigDecimal total, List<ExtensionRecord> extensions, UserRecord owner) {
+        this.id = id;
         this.status = status;
         this.created = created;
         this.dueDate = dueDate;

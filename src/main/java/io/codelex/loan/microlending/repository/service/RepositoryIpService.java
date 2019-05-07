@@ -32,10 +32,11 @@ public class RepositoryIpService implements IpService {
         }
         return remoteAddr;
     }
+    
 
     @Override
     public boolean maxAttemptsFromIpNotReached() {
-        for (int i = equalIpCounter; i < ipList.size(); i++) {
+        for (int i = 0; i < ipList.size(); i++) {
             String part1 = ipList.get(i);
             for (int j = i + 1; j < ipList.size(); j++) {
                 String part2 = ipList.get(j);
@@ -44,7 +45,7 @@ public class RepositoryIpService implements IpService {
                 }
             }
         }
-        if (equalIpCounter < 3) {
+        if (equalIpCounter < 4) {
             return true;
         }
         return false;

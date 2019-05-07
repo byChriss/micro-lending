@@ -7,17 +7,13 @@ import java.util.List;
 import java.util.function.Function;
 
 public class MapExtensionRecordToExtension implements Function<ExtensionRecord, LoanExtension> {
-    private MapLoanRecordToLoan toLoan = new MapLoanRecordToLoan();
 
     @Override
     public LoanExtension apply(ExtensionRecord extensionRecord) {
         return new LoanExtension(
-                extensionRecord.getId(),
                 extensionRecord.getCreated(),
                 extensionRecord.getDays(),
-                extensionRecord.getInterest(),
-                toLoan.apply(extensionRecord.getLoanId())
-
+                extensionRecord.getInterest()
         );
     }
 
