@@ -84,7 +84,7 @@ public class RepositoryLoanService implements LoanService {
         UserRecord currentUser = userRecordRepository.findByEmail(principal.getName());
         if (loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)) {
             throw new IllegalStateException();
-        } else if (checkIfTermIsValid(request) && checkIfAmountIsValid(request) && ipService.maxAttemptsFromIpNotReached() && checkIfTimeIsValid(clockTime)) {
+        } else if (ipService.maxAttemptsFromIpNotReached() && checkIfTimeIsValid(clockTime)) {
             ApplicationRecord record = new ApplicationRecord(
                     request.getAmount(),
                     request.getDays(),
@@ -94,6 +94,7 @@ public class RepositoryLoanService implements LoanService {
             record = applicationRecordRepository.save(record);
             return toApplication.apply(record);
         }
+
         ApplicationRecord applicationRecord = new ApplicationRecord(
                 request.getAmount(),
                 request.getDays(),
@@ -105,18 +106,28 @@ public class RepositoryLoanService implements LoanService {
 
     }
 
-    @Override
-    public Loan findByIdAndExtend(String id, Integer days) {
-        if (loanRecordRepository.isLoanPresent(id)) {
-            if (days == 7 || days == 14 || days == 30) {
-                loanRecordRepository.updateRepaymentDateByWeek(id, days);
-                createLoanExtension(id, days);
-                LoanRecord record = loanRecordRepository.findLoanById(id);
 
-                return toLoan.apply(record);
-            }
+    @Override
+    public Loan findByIdAndExtend(Principal principal, String id, Integer days) {
+        UserRecord currentUser = userRecordRepository.findByEmail(principal.getName());
+        Constraints constraints = setConstraints();
+        if (!loanRecordRepository.checkIfCurrentUserHaveLoan(currentUser)) {
+            throw new NoSuchElementException();
         }
-        throw new NoSuchElementException("Loan is not present");
+        if (!loanRecordRepository.isLoanPresent(id)
+                || days == null
+                || days < constraints.getMinExtensionDays()
+                || days > constraints.getMaxExtensionDays()) {
+
+            throw new NoSuchElementException();
+        }
+        createLoanExtension(id, days);
+        LoanRecord record = loanRecordRepository.findLoanById(id);
+        record.setDueDate(record.getDueDate().plusDays(days));
+
+        record = loanRecordRepository.save(record);
+        return toLoan.apply(record);
+
     }
 
     @Override
@@ -125,20 +136,13 @@ public class RepositoryLoanService implements LoanService {
         ExtensionRecord extensionRecord = new ExtensionRecord(
                 clockTime.getTime().toLocalDate(),
                 days,
-                interestFactorService.extendLoanInterestFactor(record.getPrincipal(), days),
+                interestFactorService.extendLoanInterestFactor(days),
                 record
 
         );
         record.getExtensions().add(extensionRecord);
         extensionRecord = extensionRecordRepository.save(extensionRecord);
         return toExtension.apply(extensionRecord);
-    }
-
-    // delete if no use ... ? 
-    @Override
-    public List<LoanRecord> findLoanByUserEmail(String owner) {
-        UserRecord userRecord = userRecordRepository.findByEmail(owner);
-        return new ArrayList<>(loanRecordRepository.findLoanWithCurrentUser(userRecord));
     }
 
     public List<Loan> findLoan(String owner) {
@@ -156,27 +160,27 @@ public class RepositoryLoanService implements LoanService {
 
     private boolean checkIfTimeIsValid(ClockTime clockTime) {
         LocalTime currentTime = clockTime.getTime().toLocalTime();
-        LocalTime endTime = LocalTime.parse("07:00:00");
-        if (currentTime.isAfter(endTime) && currentTime.isBefore(LocalTime.MAX)) {
+        LocalTime endTime = LocalTime.parse("04:59:59");
+        if (currentTime.isAfter(endTime) && currentTime.isBefore(LocalTime.of(21, 00))) {
             return true;
         }
         return false;
     }
-
-    private boolean checkIfTermIsValid(LoanRequest request) {
+    @Override
+    public boolean checkIfTermIsValid(LoanRequest request) {
         if (request.getDays() >= 7 && request.getDays() <= 30) {
             return true;
         }
         return false;
     }
 
-
-    private boolean checkIfAmountIsValid(LoanRequest request) {
+    @Override
+    public boolean checkIfAmountIsValid(LoanRequest request) {
         Constraints constraints = setConstraints();
-
         int res = request.getAmount().compareTo(constraints.getMinAmount());
         int res2 = request.getAmount().compareTo(constraints.getMaxAmount());
-        return res > 0 && res2 < 0 || res == 0 || res2 == 0;
+        return res >= 0 && res2 <= 0 /*|| res == 0 || res2 == 0*/;
+
     }
 
     public Constraints setConstraints() {
@@ -189,5 +193,6 @@ public class RepositoryLoanService implements LoanService {
                 30
         );
     }
+
 
 }

@@ -43,6 +43,8 @@ public class LoginController {
             return new ResponseEntity<>(service.createUser(request), HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
       
     }

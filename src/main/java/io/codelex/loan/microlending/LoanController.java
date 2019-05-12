@@ -3,7 +3,6 @@ package io.codelex.loan.microlending;
 import io.codelex.loan.microlending.api.*;
 
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
-import io.codelex.loan.microlending.repository.model.LoanRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 @RestController
 @RequestMapping("/api")
@@ -35,30 +34,26 @@ public class LoanController {
 
     @PostMapping("/loans/apply")
     public ResponseEntity<ApplicationResponse> creatLoanRequest(Principal principal, @Valid @RequestBody LoanRequest request, HttpServletRequest httpRequest) {
+        if (!service.checkIfAmountIsValid(request) || !service.checkIfTermIsValid(request)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Application application = service.checkApplication(principal, request, httpRequest);
-            if(application.getStatus().equals(Status.APPROVED)){
-                ApplicationResponse response = new ApplicationResponse(application.getStatus());
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }else if(application.getStatus().equals(Status.REJECTED)){
-                ApplicationResponse response = new ApplicationResponse(application.getStatus());
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-
+            ApplicationResponse response = new ApplicationResponse(application.getStatus());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return null;
+
     }
 
     @PostMapping("/loans/{id}/extend")
-    public ResponseEntity<Loan> extendLoanRequest(@PathVariable String id, @RequestParam Integer days) {
+    public ResponseEntity<Loan> extendLoanRequest(Principal principal, @PathVariable String id, @RequestParam Integer days) {
         try {
-            return new ResponseEntity<>(service.findByIdAndExtend(id, days), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(service.findByIdAndExtend(principal, id, days), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("/loans/{id}/extensions")

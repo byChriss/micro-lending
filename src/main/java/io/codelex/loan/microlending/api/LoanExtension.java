@@ -7,16 +7,15 @@ public class LoanExtension {
     private LocalDate created;
     private Integer days;
     private BigDecimal interest;
-   
 
 
     public LoanExtension(LocalDate created, Integer days, BigDecimal interest) {
         this.created = created;
         this.days = days;
         this.interest = interest;
-        
+
     }
-    
+
     public LocalDate getCreated() {
         return created;
     }
@@ -40,5 +39,5 @@ public class LoanExtension {
     public void setInterest(BigDecimal interest) {
         this.interest = interest;
     }
-    
+
 }
