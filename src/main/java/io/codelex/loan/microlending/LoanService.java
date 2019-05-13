@@ -2,7 +2,6 @@ package io.codelex.loan.microlending;
 
 import io.codelex.loan.microlending.api.*;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
-import io.codelex.loan.microlending.repository.model.LoanRecord;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;

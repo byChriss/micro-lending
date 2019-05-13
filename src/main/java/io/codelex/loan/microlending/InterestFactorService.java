@@ -3,6 +3,9 @@ package io.codelex.loan.microlending;
 import java.math.BigDecimal;
 
 public interface InterestFactorService {
-    BigDecimal extendLoanInterestFactor(BigDecimal amount, Integer term);
+    
+    BigDecimal calculateExtensionInterest(BigDecimal principal, Integer days);
+
+    BigDecimal calculate(BigDecimal principal, Integer days);
 
 }

@@ -70,8 +70,8 @@ public class RepositoryLoanService implements LoanService {
                 clockTime.getTime().toLocalDate(),
                 clockTime.getTime().toLocalDate().plusDays(request.getDays()),
                 request.getAmount(),
-                interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getDays()),
-                request.getAmount().add(interestFactorService.extendLoanInterestFactor(request.getAmount(), request.getDays())),
+                interestFactorService.calculate(request.getAmount(), request.getDays()),
+                request.getAmount().add(interestFactorService.calculate(request.getAmount(), request.getDays())),
                 extensionRecords,
                 userRecord
         );
@@ -136,7 +136,7 @@ public class RepositoryLoanService implements LoanService {
         ExtensionRecord extensionRecord = new ExtensionRecord(
                 clockTime.getTime().toLocalDate(),
                 days,
-                interestFactorService.extendLoanInterestFactor(days),
+                interestFactorService.calculateExtensionInterest(record.getPrincipal(), days),
                 record
 
         );
