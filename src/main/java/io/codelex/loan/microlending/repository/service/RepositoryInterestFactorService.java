@@ -10,7 +10,7 @@ import static java.math.RoundingMode.HALF_DOWN;
 
 @Component
 public class RepositoryInterestFactorService implements InterestFactorService {
-    
+
     private static final BigDecimal INTEREST_RATE_PER_MONTH = new BigDecimal("0.1");
     private static final BigDecimal EXTENSION_INTEREST_COEFF = new BigDecimal("0.1");
     private static final int DAYS_IN_MONTH = 30;
@@ -23,7 +23,7 @@ public class RepositoryInterestFactorService implements InterestFactorService {
                 .multiply(new BigDecimal(days))
                 .setScale(2, HALF_DOWN);
     }
-    
+
     @Override
     public BigDecimal calculateExtensionInterest(BigDecimal principal, Integer days) {
         var interest = calculate(principal, days);

@@ -15,16 +15,16 @@ public class ExtensionRecord {
     private Integer days;
     private BigDecimal interest;
     @ManyToOne
-    private LoanRecord loanId;
+    private LoanRecord loanRecord;
 
     public ExtensionRecord() {
     }
 
-    public ExtensionRecord(LocalDate created, Integer days, BigDecimal interest, LoanRecord loanId) {
+    public ExtensionRecord(LocalDate created, Integer days, BigDecimal interest, LoanRecord loanRecord) {
         this.created = created;
         this.days = days;
         this.interest = interest;
-        this.loanId = loanId;
+        this.loanRecord = loanRecord;
     }
 
     public Long getId() {
@@ -59,12 +59,12 @@ public class ExtensionRecord {
         this.interest = interest;
     }
 
-    public LoanRecord getLoanId() {
-        return loanId;
+    public LoanRecord getLoanRecord() {
+        return loanRecord;
     }
 
-    public void setLoanId(LoanRecord loanId) {
-        this.loanId = loanId;
+    public void setLoanRecord(LoanRecord loanRecord) {
+        this.loanRecord = loanRecord;
     }
 
     @Override

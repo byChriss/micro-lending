@@ -1,13 +1,13 @@
 package io.codelex.loan.microlending.api;
 
 public class ApplicationResponse {
-    private Status status;
+    private ApplicationStatus status;
 
-    public ApplicationResponse(Status status) {
+    public ApplicationResponse(ApplicationStatus status) {
         this.status = status;
     }
 
-    public Status getStatus() {
+    public ApplicationStatus getStatus() {
         return status;
     }
 }

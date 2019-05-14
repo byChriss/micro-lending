@@ -1,6 +1,6 @@
 package io.codelex.loan.microlending.repository.model;
 
-import io.codelex.loan.microlending.api.Status;
+import io.codelex.loan.microlending.api.ApplicationStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,10 +13,10 @@ public class ApplicationRecord {
     private Long id;
     private BigDecimal amount;
     private Integer term;
-    private Status status;
+    private ApplicationStatus status;
     
 
-    public ApplicationRecord(BigDecimal amount, Integer term, Status status) {
+    public ApplicationRecord(BigDecimal amount, Integer term, ApplicationStatus status) {
         this.amount = amount;
         this.term = term;
         this.status = status;
@@ -46,11 +46,11 @@ public class ApplicationRecord {
         this.term = term;
     }
 
-    public Status getStatus() {
+    public ApplicationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
 }

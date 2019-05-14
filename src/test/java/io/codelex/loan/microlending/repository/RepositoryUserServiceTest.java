@@ -24,7 +24,7 @@ class RepositoryUserServiceTest {
     private MapUserRecordToUser toUser = Mockito.mock(MapUserRecordToUser.class);
     private UserRecord userRecord = createUserRecord();
     private LoginRequest loginRequest = createLoginRequest();
-    private CreateUserRequest createUserRequest = createUserRequest();
+    private RegisterRequest createUserRequest = createUserRequest();
 
     @Test
     void should_be_able_to_create_user() {
@@ -73,8 +73,8 @@ class RepositoryUserServiceTest {
         assertThrows(IllegalArgumentException.class, (Executable) user);
     }
 
-    private CreateUserRequest createUserRequest() {
-        return new CreateUserRequest(
+    private RegisterRequest createUserRequest() {
+        return new RegisterRequest(
                 "User",
                 "12345",
                 "Krists",

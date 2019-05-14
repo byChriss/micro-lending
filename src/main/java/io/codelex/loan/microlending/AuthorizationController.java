@@ -1,6 +1,6 @@
 package io.codelex.loan.microlending;
 
-import io.codelex.loan.microlending.api.CreateUserRequest;
+import io.codelex.loan.microlending.api.RegisterRequest;
 import io.codelex.loan.microlending.api.LoginRequest;
 import io.codelex.loan.microlending.api.User;
 import io.codelex.loan.microlending.authorisation.service.AuthService;
@@ -16,11 +16,11 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
-public class LoginController {
+public class AuthorizationController {
     private final AuthService authService;
     private final RepositoryUserService service;
 
-    public LoginController(AuthService authService, RepositoryUserService service) {
+    public AuthorizationController(AuthService authService, RepositoryUserService service) {
         this.authService = authService;
         this.service = service;
     }
@@ -37,7 +37,7 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterRequest request) {
         try {
             authService.authorise(request.getEmail(), request.getPassword(), Role.CUSTOMER);
             return new ResponseEntity<>(service.createUser(request), HttpStatus.OK);

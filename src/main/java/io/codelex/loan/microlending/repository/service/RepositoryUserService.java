@@ -1,7 +1,7 @@
 package io.codelex.loan.microlending.repository.service;
 
 import io.codelex.loan.microlending.UserService;
-import io.codelex.loan.microlending.api.CreateUserRequest;
+import io.codelex.loan.microlending.api.RegisterRequest;
 import io.codelex.loan.microlending.api.LoginRequest;
 import io.codelex.loan.microlending.api.User;
 import io.codelex.loan.microlending.repository.UserRecordRepository;
@@ -25,7 +25,7 @@ public class RepositoryUserService implements UserService {
     }
 
     @Override
-    public User createUser(CreateUserRequest request) {
+    public User createUser(RegisterRequest request) {
         if (userRecordRepository.isUserPresent(request.getEmail()) || checkIfPasswordIsValid(request) ) {
             throw new IllegalArgumentException("username is taken");
         }
@@ -52,7 +52,7 @@ public class RepositoryUserService implements UserService {
 
     }
     
-    private boolean checkIfPasswordIsValid(CreateUserRequest request){
+    private boolean checkIfPasswordIsValid(RegisterRequest request){
         if (request.getPassword().trim().isEmpty() || request.getPassword().length() <= 3){
             return true;
         }

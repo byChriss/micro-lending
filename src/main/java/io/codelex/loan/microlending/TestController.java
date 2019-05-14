@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/testing-api")
-public class TimeController {
+public class TestController {
     private ClockTime clockTime;
     private final LoanRecordRepository loanRecordRepository;
     private final LoanExtensionRecordRepository extensionRecordRepository;
     private final UserRecordRepository userRecordRepository;
 
 
-    public TimeController(ClockTime clockTime, LoanRecordRepository loanRecordRepository, LoanExtensionRecordRepository extensionRecordRepository, UserRecordRepository userRecordRepository) {
+    public TestController(ClockTime clockTime, LoanRecordRepository loanRecordRepository, LoanExtensionRecordRepository extensionRecordRepository, UserRecordRepository userRecordRepository) {
         this.clockTime = clockTime;
         this.loanRecordRepository = loanRecordRepository;
         this.extensionRecordRepository = extensionRecordRepository;
@@ -48,5 +48,6 @@ public class TimeController {
         loanRecordRepository.deleteAll();
         extensionRecordRepository.deleteAll();
         userRecordRepository.deleteAll();
+
     }
 }

@@ -32,7 +32,6 @@ public class RepositoryIpService implements IpService {
         }
         return remoteAddr;
     }
-    
 
     @Override
     public boolean maxAttemptsFromIpNotReached() {

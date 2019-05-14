@@ -6,9 +6,9 @@ public class Application {
     private Long id;
     private BigDecimal amount;
     private Integer term;
-    private Status status;
+    private ApplicationStatus status;
 
-    public Application(Long id, BigDecimal amount, Integer term, Status status) {
+    public Application(Long id, BigDecimal amount, Integer term, ApplicationStatus status) {
         this.id = id;
         this.amount = amount;
         this.term = term;
@@ -39,11 +39,11 @@ public class Application {
         this.term = term;
     }
 
-    public Status getStatus() {
+    public ApplicationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
 }

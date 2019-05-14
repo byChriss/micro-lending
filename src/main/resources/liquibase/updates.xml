@@ -84,12 +84,12 @@
             <column name="interest" type="decimal">
                 <constraints nullable="false"/>
             </column>
-            <column name="loan_id" type="bigint">
+            <column name="loan_record" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="extensions"
-                                 baseColumnNames="loan_id"
+                                 baseColumnNames="loan_record"
                                  constraintName="fk_extensions_loan_id_loans_id"
                                  referencedTableName="loans"
                                  referencedColumnNames="id"

@@ -1,5 +1,7 @@
 package io.codelex.loan.microlending.repository.model;
 import io.codelex.loan.microlending.api.LoanStatus;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

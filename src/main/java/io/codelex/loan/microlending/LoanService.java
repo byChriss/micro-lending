@@ -4,6 +4,7 @@ import io.codelex.loan.microlending.api.*;
 import io.codelex.loan.microlending.repository.model.ExtensionRecord;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 import java.util.List;
 
@@ -16,15 +17,16 @@ public interface LoanService {
 
     LoanExtension createLoanExtension(String id, Integer days);
 
-    List<ExtensionRecord> getLoansWithExtensions(Long id);
+    List<ExtensionRecord> findLoansWithExtensions(Long id);
    
-    Application checkApplication(Principal principal, LoanRequest request, HttpServletRequest servletRequest);
+    Application application(Principal principal, LoanRequest request, HttpServletRequest servletRequest);
 
     Constraints setConstraints();
 
     List<Loan> findLoan(String owner);
 
-    boolean checkIfAmountIsValid(LoanRequest request);
+    boolean amountValidation(LoanRequest request);
 
-    boolean checkIfTermIsValid(LoanRequest request);
+    boolean termValidation(LoanRequest request);
+
 }
